@@ -1,113 +1,60 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Footer = () => {
-  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
-  const [favoriteNumber, setFavoriteNumber] = useState(0);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    const getFavoriteRecipes = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem('favorites');
-        if (jsonValue != null) {
-          setFavoriteRecipes(JSON.parse(jsonValue));
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    getFavoriteRecipes();
-  }, []);
-
-  useEffect(() => {
-    setFavoriteNumber(favoriteRecipes.length);
-  }, [favoriteRecipes]);
-
-  useEffect(() => {
-    const updateFavoriteRecipes = async () => {
-      try {
-        await AsyncStorage.setItem(
-          'favorites',
-          JSON.stringify(favoriteRecipes),
-        );
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    updateFavoriteRecipes();
-  }, [favoriteRecipes]);
 
   return (
     <FooterContainer>
       <HomeButton onPress={() => navigation.navigate('Home')}>
         <Logo source={require('../../assets/home-icon.png')} />
-        <Title>Home</Title>
+        <Title>Accueil</Title>
       </HomeButton>
-      <SearchButton>
+      <SearchButton onPress={() => navigation.navigate('Search')}>
         <Logo source={require('../../assets/search-icon.png')} />
-        <Title>Search</Title>
+        <Title>Recherche</Title>
       </SearchButton>
-
-      <ProfilButton onPress={() => navigation.navigate('Profil')}>
-        <Logo source={require('../../assets/profil-icon.png')} />
-        <Title>Your Library</Title>
-      </ProfilButton>
+      <LibraryButton onPress={() => navigation.navigate('Library')}>
+        <Logo source={require('../../assets/library-icon.png')} />
+        <Title>Bibliothèque</Title>
+      </LibraryButton>
     </FooterContainer>
   );
 };
 
 const Title = styled.Text`
-  font-size: 16px;
-  color: #fff;
-
-  margin-left: 8px;
+  font-size: ${props => props.theme.fontSizes.medium};
+  font-family: ${props => props.theme.fonts.regular};
+  color: ${props => props.theme.text.dark};
+  margin-top: 4px;
 `;
 const SearchButton = styled.TouchableOpacity`
-  flex-direction: row;
   align-items: center;
+  justify-content: center;
   border-radius: 20px;
   padding-horizontal: 12px;
   padding-vertical: 8px;
 `;
-const AddButton = styled.TouchableOpacity`
-  flex-direction: row;
+const LibraryButton = styled.TouchableOpacity`
   align-items: center;
+  justify-content: center;
   border-radius: 20px;
   padding-horizontal: 12px;
   padding-vertical: 8px;
 `;
 
 const FooterContainer = styled.View`
-  background-color: #ff6f61;
+  background-color: ${props => props.theme.colors.main};
   padding: 12px;
   flex-direction: row;
   justify-content: space-between;
   box-shadow: 0px -5px 5px rgba(0, 0, 0, 0.25);
 `;
 
-const ProfilButton = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-  border-radius: 20px;
-  padding-horizontal: 12px;
-  padding-vertical: 8px;
-`;
 const HomeButton = styled.TouchableOpacity`
-  flex-direction: row;
   align-items: center;
-  border-radius: 20px;
-  padding-horizontal: 12px;
-  padding-vertical: 8px;
-`;
-
-const FavoriteButton = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
+  justify-content: center;
   border-radius: 20px;
   padding-horizontal: 12px;
   padding-vertical: 8px;

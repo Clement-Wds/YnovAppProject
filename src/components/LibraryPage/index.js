@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const HomeScreen = () => {
+const LibraryScreen = () => {
   return (
     <Container>
-      <Title>Spotify</Title>
+      <Title>Bibliothèque</Title>
     </Container>
   );
 };
@@ -26,4 +26,4 @@ const Title = styled.Text`
   align-self: center;
 `;
 
-export default HomeScreen;
+export default LibraryScreen;

@@ -3,6 +3,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
 import styled from 'styled-components';
 import Home from '../screens/home';
+import Search from '../screens/search';
+import Library from '../screens/library';
 import Header from '../components/header';
 import Footer from '../components/footer';
 
@@ -17,6 +19,8 @@ const Routes = () => {
             header: ({navigation}) => <Header navigation={navigation} />,
           }}>
           <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Search" component={Search} />
+          <Stack.Screen name="Library" component={Library} />
         </Stack.Navigator>
         <Footer />
       </NavigationContainer>

@@ -7,7 +7,7 @@ import Search from '../screens/search';
 import Library from '../screens/library';
 import Header from '../components/header';
 import Footer from '../components/footer';
-
+import Register from '../screens/register'
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
@@ -21,6 +21,7 @@ const Routes = () => {
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Search" component={Search} />
           <Stack.Screen name="Library" component={Library} />
+          <Stack.Screen name="Register" component={Register} />
         </Stack.Navigator>
         <Footer />
       </NavigationContainer>

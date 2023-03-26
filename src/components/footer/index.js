@@ -15,6 +15,10 @@ const Footer = () => {
         <Logo source={require('../../assets/search-icon.png')} />
         <Title>Recherche</Title>
       </SearchButton>
+      <SearchButton onPress={() => navigation.navigate('Register')}>
+        <Logo source={require('../../assets/search-icon.png')} />
+        <Title>Register</Title>
+      </SearchButton>
       <LibraryButton onPress={() => navigation.navigate('Library')}>
         <Logo source={require('../../assets/library-icon.png')} />
         <Title>Bibliothèque</Title>

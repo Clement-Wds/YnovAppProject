@@ -10,10 +10,10 @@ const Header = () => {
       </LeftContainer>
       <RightContainer>
         <TouchableOpacity>
-          <Logo source={require('../../assets/recently-icon.png')} />
+          <Logo source={require('../../assets/history.png')} />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Logo source={require('../../assets/setting-icon.png')} />
+          <Logo source={require('../../assets/settings.png')} />
         </TouchableOpacity>
       </RightContainer>
     </Container>

@@ -8,23 +8,23 @@ const Footer = () => {
   return (
     <FooterContainer>
       <HomeButton onPress={() => navigation.navigate('Home')}>
-        <Logo source={require('../../assets/home-icon.png')} />
+        <Logo source={require('../../assets/home.png')} />
         <Title>Accueil</Title>
       </HomeButton>
       <SearchButton onPress={() => navigation.navigate('Search')}>
-        <Logo source={require('../../assets/search-icon.png')} />
+        <Logo source={require('../../assets/search.png')} />
         <Title>Recherche</Title>
       </SearchButton>
       <SearchButton onPress={() => navigation.navigate('Register')}>
-        <Logo source={require('../../assets/search-icon.png')} />
+        <Logo source={require('../../assets/user.png')} />
         <Title>Register</Title>
       </SearchButton>
       <LibraryButton onPress={() => navigation.navigate('Library')}>
-        <Logo source={require('../../assets/library-icon.png')} />
+        <Logo source={require('../../assets/library.png')} />
         <Title>Bibliothèque</Title>
       </LibraryButton>
       <LibraryButton onPress={() => navigation.navigate('AddMusique')}>
-        <Logo source={require('../../assets/library-icon.png')} />
+        <Logo source={require('../../assets/plus-circle.png')} />
         <Title>Add</Title>
       </LibraryButton>
     </FooterContainer>

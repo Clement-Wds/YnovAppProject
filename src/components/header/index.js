@@ -26,13 +26,7 @@ const Container = styled.View`
   align-items: center;
   padding: 10px;
   background-color: ${props => props.theme.colors.main};
-  shadow-color: #000000;
-  shadow-offset: {
-    width: 0,
-    height: 2,
-  };
-  shadow-opacity: 0.25;
-  shadow-radius: 3.84;
+
   elevation: 5;
   z-index: 1;
   width: 100%;

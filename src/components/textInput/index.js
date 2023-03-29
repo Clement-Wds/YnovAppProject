@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FileInput, FileField } from 'react-admin';
 
 const Index = ({placeholder,value,onChangeText}) => {
   return (
@@ -9,6 +10,7 @@ const Index = ({placeholder,value,onChangeText}) => {
           placeholder={placeholder}
           value={value}
           onChangeText={onChangeText}
+          
         />
         </InputContainer>
     </>

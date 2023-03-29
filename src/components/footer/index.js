@@ -23,6 +23,10 @@ const Footer = () => {
         <Logo source={require('../../assets/library-icon.png')} />
         <Title>Bibliothèque</Title>
       </LibraryButton>
+      <LibraryButton onPress={() => navigation.navigate('AddMusique')}>
+        <Logo source={require('../../assets/library-icon.png')} />
+        <Title>Add</Title>
+      </LibraryButton>
     </FooterContainer>
   );
 };

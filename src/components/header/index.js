@@ -1,18 +1,22 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
+import {useNavigation} from '@react-navigation/native';
 
 const Header = () => {
+  const navigation = useNavigation();
   return (
     <Container>
       <LeftContainer>
-        <Greeting>Bonjour</Greeting>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Greeting>Bonjour</Greeting>
+        </TouchableOpacity>
       </LeftContainer>
       <RightContainer>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Library')}>
           <Logo source={require('../../assets/history.png')} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Logo source={require('../../assets/settings.png')} />
         </TouchableOpacity>
       </RightContainer>

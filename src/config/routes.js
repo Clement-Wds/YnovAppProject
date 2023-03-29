@@ -9,6 +9,8 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import Register from '../screens/register';
 import AddMusique from '../screens/addMusique';
+import Profil from '../screens/profl';
+import Login from '../screens/login';
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
@@ -24,6 +26,8 @@ const Routes = () => {
           <Stack.Screen name="Library" component={Library} />
           <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="AddMusique" component={AddMusique} />
+          <Stack.Screen name="Profil" component={Profil} />
+          <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
         <Footer />
       </NavigationContainer>

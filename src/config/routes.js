@@ -7,8 +7,8 @@ import Search from '../screens/search';
 import Library from '../screens/library';
 import Header from '../components/header';
 import Footer from '../components/footer';
-import Register from '../screens/register'
-import AddMusique from '../screens/addMusique'
+import Register from '../screens/register';
+import AddMusique from '../screens/addMusique';
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {

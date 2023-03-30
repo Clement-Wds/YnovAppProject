@@ -1,16 +1,42 @@
-import {SELECT_AUDIO} from '../actions/selectAudio';
+import {SET_TITLE, SET_DESCRIPTION, SET_AUDIO_FILE, SET_ARTISTE, SET_ALBUM} from '../actions/selectAudio';
 
 const initialState = {
-  audio: [],
+  title: '',
+  description: '',
+  audioFile: null,
+  artiste: '',
+  album: ''
 };
 
-const selectAudio =  (state = initialState, action) => {
+const selectAudio = (state = initialState, action) => {
   switch (action.type) {
-    case SELECT_AUDIO:
+    case SET_TITLE:
       return {
         ...state,
-        audio: state.audio,
+        title: state.title,
       };
+    case SET_DESCRIPTION:
+      return {
+        ...state,
+        title: state.description,
+      };
+    case SET_AUDIO_FILE:
+      return {
+        ...state,
+        audioFile: state.audioFile,
+      };
+    case SET_ARTISTE:
+      return {
+        ...state,
+        title: state.artiste,
+      };
+    case SET_ALBUM:
+      return {
+        ...state,
+        title: state.album,
+      };
+    default:
+      return state;
   }
 };
 

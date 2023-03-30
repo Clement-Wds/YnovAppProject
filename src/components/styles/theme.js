@@ -3,7 +3,7 @@ export const theme = {
     main: '#ffffff',
     light: '#FFECB3',
     dark: '#1D1D1D',
-    background: '#F5F5F5',
+    background: '#ffffff',
   },
   text: {
     main: '#FFFFFF',

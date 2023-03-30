@@ -11,14 +11,14 @@ import {theme} from './src/components/styles/theme';
 const App = () => {
   const {t} = useTranslation();
   return (
-    // <Provider store={store}>
-    //   <ThemeProvider theme={theme}>
-    //     <Routes />
-    //   </ThemeProvider>
-    // </Provider>
-    <ThemeProvider theme={theme}>
-      <Routes />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Routes />
+      </ThemeProvider>
+    </Provider>
+    // <ThemeProvider theme={theme}>
+    //   <Routes />
+    // </ThemeProvider>
   );
 };
 

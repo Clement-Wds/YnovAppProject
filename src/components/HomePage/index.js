@@ -1,35 +1,24 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components/native';
 import {useTranslation} from 'react-i18next';
 import {AntDesign} from '@expo/vector-icons';
 import {MaterialIcons} from '@expo/vector-icons';
+import firebase from '../../../firebase';
 
 const HomeScreen = () => {
+  const [playlists, setPlaylists] = useState([]);
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      const playlistsRef = firebase.firestore().collection('playlists');
+      const snapshot = await playlistsRef.get();
+      const playlistsData = snapshot.docs.map(doc => doc.data());
+      setPlaylists(playlistsData);
+    };
+    fetchPlaylists();
+  }, []);
+
   const {t} = useTranslation();
 
-  const playlists = [
-    //A remplacer lorsqu'on aura les vraies données
-    {
-      id: '1',
-      image: 'https://picsum.photos/id/870/200/200',
-    },
-    {
-      id: '2',
-      image: 'https://picsum.photos/id/871/200/200',
-    },
-    {
-      id: '3',
-      image: 'https://picsum.photos/id/872/200/200',
-    },
-    {
-      id: '4',
-      image: 'https://picsum.photos/id/873/200/200',
-    },
-    {
-      id: '5',
-      image: 'https://picsum.photos/id/874/200/200',
-    },
-  ];
   const RecentlyPlayed = [
     {
       id: 1,
@@ -87,6 +76,7 @@ const HomeScreen = () => {
           ))}
         </PlaylistList>
       </PlaylistContainer>
+
       <SectionTitle>
         <MaterialIcons name="album" size={24} color="white" />
         <Title>{t('resources.home.albums')}</Title>

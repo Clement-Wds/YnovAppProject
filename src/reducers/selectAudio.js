@@ -4,7 +4,7 @@ const initialState = {
   audio: [],
 };
 
-export default (state = initialState, action) => {
+const selectAudio =  (state = initialState, action) => {
   switch (action.type) {
     case SELECT_AUDIO:
       return {
@@ -13,3 +13,5 @@ export default (state = initialState, action) => {
       };
   }
 };
+
+export default selectAudio;

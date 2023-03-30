@@ -3,18 +3,20 @@ export const theme = {
     main: '#ffffff',
     light: '#FFECB3',
     dark: '#1D1D1D',
-    background: '#F5F5F5',
+    background: '#ffffff',
   },
   text: {
     main: '#FFFFFF',
     light: '#FFFFFF',
+    lightGrey: '#BDBDBD',
     dark: '#1D1D1D',
     background: '#F5F5F5',
   },
   spacing: {
-    small: 5,
-    medium: 10,
-    large: 20,
+    small: '5px',
+    medium: '10px',
+
+    large: '20px',
   },
   fonts: {
     regular: 'Roboto-Regular',
@@ -22,8 +24,9 @@ export const theme = {
     bold: 'Roboto-Bold',
   },
   fontSizes: {
-    small: 12,
-    medium: 14,
-    large: 24,
+    small: '12px',
+    medium: '14px',
+    mediumLarge: '18px',
+    large: '24px',
   },
 };

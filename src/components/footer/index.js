@@ -1,31 +1,33 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 const Footer = () => {
+  const {t} = useTranslation();
   const navigation = useNavigation();
 
   return (
     <FooterContainer>
       <HomeButton onPress={() => navigation.navigate('Home')}>
-        <Logo source={require('../../assets/home-icon.png')} />
-        <Title>Accueil</Title>
+        <Logo source={require('../../assets/home.png')} />
+        <Title>{t('resources.footer.home')}</Title>
       </HomeButton>
       <SearchButton onPress={() => navigation.navigate('Search')}>
-        <Logo source={require('../../assets/search-icon.png')} />
-        <Title>Recherche</Title>
+        <Logo source={require('../../assets/search.png')} />
+        <Title>{t('resources.footer.search')}</Title>
       </SearchButton>
       <SearchButton onPress={() => navigation.navigate('Register')}>
-        <Logo source={require('../../assets/search-icon.png')} />
-        <Title>Register</Title>
+        <Logo source={require('../../assets/user.png')} />
+        <Title>{t('resources.footer.register')}</Title>
       </SearchButton>
       <LibraryButton onPress={() => navigation.navigate('Library')}>
-        <Logo source={require('../../assets/library-icon.png')} />
-        <Title>Bibliothèque</Title>
+        <Logo source={require('../../assets/library.png')} />
+        <Title>{t('resources.footer.library')}</Title>
       </LibraryButton>
       <LibraryButton onPress={() => navigation.navigate('AddMusique')}>
-        <Logo source={require('../../assets/library-icon.png')} />
-        <Title>Add</Title>
+        <Logo source={require('../../assets/plus-circle.png')} />
+        <Title>{t('resources.footer.add')}</Title>
       </LibraryButton>
     </FooterContainer>
   );

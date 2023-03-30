@@ -46,17 +46,15 @@ const addMusique = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [audioFile, setAudioFile] = useState(null);
-  const [inputs, setInputs] = useState({ name: '' });
+  const [inputs, setInputs] = useState({ name: '',album:'' });
+  const [artiste, setArtiste] = useState('');
+  const [album, setAlbum] = useState('');
+
+
 
   const addArtist = async () => {
 
-    set(ref(db,'artist/' + inputs.name),{
-      username: inputs
-    }).then(()=>{
-      console.log("Good")
-    }).catch((error)=>{
-      console.log(error)
-    })}
+   }
    
 
   // Récupérer une référence de stockage
@@ -90,7 +88,7 @@ const handleAudioSelect = async () => {
 
   const handleUpload = async () => {
     if (audioFile[0] && audioFile[0].name.endsWith('.mp3')) {
-      const fileRef = storageRef.child(`audio/artiste/${audioFile[0].name}`);
+      const fileRef = storageRef.child(`audio/artiste/${artiste}/${album}/${audioFile[0].name}`);
       const task = fileRef.putFile(audioFile[0].fileCopyUri);
       task.on('state_changed', (snapshot) => {
         // Handle upload progress if needed
@@ -104,15 +102,23 @@ const handleAudioSelect = async () => {
         
         const downloadURL = await fileRef.getDownloadURL();
         
-        const databaseRef = firebase.database().ref('audios/artiste').push();
+        const databaseRef = firebase.database().ref(`audios/artiste/$`+artiste+`/`+album+`/`).push();
+        set(ref(db,'artist/' + artiste),{
+          username: artiste,
+          album: album
+        }).then(()=>{
+          console.log("Good")
+        }).catch((error)=>{
+          console.log(error)
+        })
+        
         console.log("hey");
         await databaseRef.set({
           title,
           description,
           audioURL: downloadURL,
         });
-        setTitle('');
-        setDescription('');
+        
         setAudioFile(null);
       });
     } else {
@@ -139,8 +145,14 @@ const handleAudioSelect = async () => {
       />
       <TextInput
       placeholder="Artist name"
-      value={inputs.name}
-      onChangeText={text => setInputs({ name: text })}
+      value={artiste}
+      onChangeText={(text) => setArtiste(text)}
+      
+    />
+    <TextInput
+      placeholder="Album name"
+      value={album}
+      onChangeText={(text) => setAlbum(text )}
       
     />
 

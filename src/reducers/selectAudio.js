@@ -39,5 +39,3 @@ const selectAudio = (state = initialState, action) => {
       return state;
   }
 };
-
-export default selectAudio;

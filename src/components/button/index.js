@@ -11,15 +11,15 @@ const Index = ({title, onPress}) => {
   );
 };
 const StyledText = styled.Text`
-color: #fff;
-font-size: 18px;
+  color: #fff;
+  font-size: 18px;
 `;
 
 const StyledButton = styled.TouchableOpacity`
-background-color: #0d6efd;
-padding: 15px;
-border-radius: 5px;
-align-items: center;
-margin-bottom: 20px;
+  background-color: #0d6efd;
+  padding: 15px;
+  border-radius: 5px;
+  align-items: center;
+  margin-bottom: 20px;
 `;
 export default Index;

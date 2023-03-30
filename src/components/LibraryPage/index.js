@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import {useTranslation} from 'react-i18next';
 
 const LibraryScreen = () => {
+  const {t} = useTranslation();
   return (
     <Container>
-      <Title>Bibliothèque</Title>
+      <Title>{t('resources.library.title')}</Title>
     </Container>
   );
 };
@@ -19,11 +21,8 @@ const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 16px;
-
   color: ${props => props.theme.text.main};
-  text-transform: uppercase;
-
-  align-self: center;
+  text-align: left;
 `;
 
 export default LibraryScreen;

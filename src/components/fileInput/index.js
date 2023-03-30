@@ -14,14 +14,14 @@ const StyledText = styled(Text)`
 `;
 
 const AudioInput = () => {
-  const [selectedAudio, setSelectedAudio] = useState(null);
+  const [audioFile, setAudioFile] = useState(null);
 
   const handleAudioSelect = async () => {
     try {
       const result = await DocumentPicker.pick({
         type: [DocumentPicker.types.audio],
       });
-      setSelectedAudio(result);
+      setAudioFile(result);
     } catch (err) {
       console.log('Error selecting audio file: ', err);
     }
@@ -29,7 +29,7 @@ const AudioInput = () => {
 
   return (
     <StyledTouchableOpacity onPress={handleAudioSelect}>
-      <StyledText>{selectedAudio ? selectedAudio.name : 'Sélectionner un fichier audio'}</StyledText>
+      <StyledText>{audioFile ? audioFile.name : 'Sélectionner un fichier audio'}</StyledText>
     </StyledTouchableOpacity>
   );
 };

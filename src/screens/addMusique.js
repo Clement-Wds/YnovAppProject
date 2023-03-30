@@ -14,7 +14,7 @@ import styled from 'styled-components/native';
 import DocumentPicker from 'react-native-document-picker';
 import { requestMultiple  } from 'react-native-permissions';
 import {getDatabase} from "firebase/database"
-import {ref,set } from "firebase/database"
+import {ref,set,get, push} from "firebase/database"
 const OPEN_DOCUMENT = 'android.intent.action.OPEN_DOCUMENT';
 
 // Initialiser Firebase
@@ -101,24 +101,60 @@ const handleAudioSelect = async () => {
         // Handle successful upload
         
         const downloadURL = await fileRef.getDownloadURL();
+        function cleanFileName(fileName) {
+          return fileName.replace(/[.$#\[\]\/]/g, '_');
+        }
         
-        const databaseRef = firebase.database().ref(`audios/artiste/$`+artiste+`/`+album+`/`).push();
-        set(ref(db,'artist/' + artiste),{
-          username: artiste,
-          album: album
-        }).then(()=>{
-          console.log("Good")
-        }).catch((error)=>{
-          console.log(error)
-        })
+        const databaseRef = firebase.database().ref(`audios/artiste/${artiste}/${album}`).push();
+const artistRef = ref(db, `artist/${artiste}`);
+const albumRef = ref(db, `artist/${artiste}/${album}`);
+const musicRef = ref(db, `artist/${artiste}/${album}/${cleanFileName(audioFile[0].name)}`);
+
+Promise.all([
+  get(artistRef),
+  get(albumRef),
+  get(musicRef)
+]).then(results => {
+  const artistExists = results[0].exists();
+  const albumExists = results[1].exists();
+  const musicExists = results[2].exists();
+
+  if (artistExists && albumExists && musicExists) {
+    console.log("L'artiste, l'album et la musique existent déjà dans la base de données.");
+    return;
+  } else if (artistExists && albumExists && !musicExists) {
+    console.log("L'artiste et l'album existent déjà dans la base de données, mais pas la musique. Ajout de la musique...");
+    return set(musicRef, {name: cleanFileName(audioFile[0].name)});
+  } else if (artistExists && !albumExists) {
+    console.log("L'artiste existe déjà dans la base de données, mais pas l'album ni la musique. Ajout de l'album et de la musique...");
+    return set(albumRef, {
+      [cleanFileName(audioFile[0].name)]: {
+        name: cleanFileName(audioFile[0].name)
+      }
+    });
+  } else {
+    console.log("L'artiste, l'album et la musique n'existent pas dans la base de données. Ajout de l'artiste, de l'album et de la musique...");
+    return set(artistRef, {
+      [album]: {
+        [cleanFileName(audioFile[0].name)]: {
+          name: cleanFileName(audioFile[0].name)
+        }
+      }
+    });
+  }
+}).then(() => {
+  console.log("good");
+}).catch((error) => {
+  console.log(error);
+});
+
         
         console.log("hey");
-        await databaseRef.set({
-          title,
-          description,
-          audioURL: downloadURL,
-        });
+        setAudioFile(null);
         
+
+        
+        console.log("hey");
         setAudioFile(null);
       });
     } else {

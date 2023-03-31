@@ -42,6 +42,7 @@ const requestPermissions = async () => {
 const addMusique = () => {
   useEffect(() => {
     requestPermissions();
+    
   }, []);
 
   const [audioFile, setAudioFile] = useState(null);
@@ -292,9 +293,9 @@ const addMusique = () => {
           setAudioFile(null);
           setPhotoFile(null);
           setArtiste(null);
-         setAlbum(null);
-         setSelection(null);
-         setSelection2(null);
+          setAlbum(null);
+          setSelection(null);
+          setSelection2(null);
         },
       );
     } else {

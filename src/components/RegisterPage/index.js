@@ -11,16 +11,30 @@ import {
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 import Button from '../../components/button';
-import React from 'react';
-import {Alert} from 'react-native';
+import React,{useEffect}from 'react';
+
+import {Alert,PermissionsAndroid} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 
 import { getDatabase, ref, set } from "firebase/database";
 import 'firebase/auth';
 import 'firebase/firestore';
+import Geolocation from '@react-native-community/geolocation';
+import {requestMultiple} from 'react-native-permissions';
 
 const RegisterPage = () => {
+  const requestPermissions = async () => {
+    const result = await requestMultiple([
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    
+    ]);
+    console.log(result);
+  };
+  useEffect(() => {
+    requestPermissions();
+  }, []);
+ 
   const {t} = useTranslation();
   const navigation = useNavigation();
   GoogleSignin.configure({
@@ -35,6 +49,36 @@ const RegisterPage = () => {
     password: '',
     password_confirmation: '',
   });
+  const [positionGPS, setPositionGPS]= React.useState({
+    longitude:'',
+    latitude:''
+  })
+
+  const GetPosition = async () =>{
+
+    try {
+      await requestPermissions();
+      Geolocation.getCurrentPosition(
+   
+        (position) => {
+          setPositionGPS({...positionGPS, latitude: position.coords.latitude})
+          setPositionGPS({...positionGPS, longitude: position.coords.longitude})
+          console.log(positionGPS.latitude);
+          console.log(positionGPS.longitude);
+        },
+        (error) => {
+          console.log(error.code, error.message);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      
+      );
+
+    }catch (err) {
+      console.log('Error selecting audio file: ', err);
+    }
+
+  }
+  
 
   const HandleRegister = () => {
     if (inputs.password == inputs.password_confirmation) {
@@ -142,6 +186,7 @@ const RegisterPage = () => {
         }
       />
       <Button title={t('resources.register.title')} onPress={HandleRegister} />
+      <Button title={t('resources.register.title')} onPress={GetPosition} />
       <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Light}

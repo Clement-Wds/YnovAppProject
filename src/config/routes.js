@@ -32,7 +32,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name="Library" component={Library} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen
-        name={t('resources.addMusique.title')}
+        name="AddMusique"
         component={AddMusique}
       />
       <Stack.Screen name={t('resources.profil.title')} component={Profil} />

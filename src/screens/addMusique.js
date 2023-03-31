@@ -19,7 +19,7 @@ import styled from 'styled-components/native';
 import DocumentPicker from 'react-native-document-picker';
 import {requestMultiple} from 'react-native-permissions';
 import {getDatabase} from 'firebase/database';
-import {ref, set, get} from 'firebase/database';
+import {ref, set, get,query, orderByChild,equalTo} from 'firebase/database';
 
 import {SelectList} from 'react-native-dropdown-select-list';
 import CheckBox from '@react-native-community/checkbox';
@@ -34,7 +34,6 @@ const db = getDatabase(app);
 const requestPermissions = async () => {
   const result = await requestMultiple([
     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-    PermissionsAndroid.PERMISSIONS.A,
     PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
   ]);
   console.log(result);
@@ -50,6 +49,8 @@ const addMusique = () => {
   const [album, setAlbum] = useState('');
   const [selected, setSelected] = useState('');
   const [isSelected, setSelection] = useState(false);
+  const [isSelected2, setSelection2] = useState(false);
+
 
   const [artists, setArtists] = useState([]);
   const [selectedArtist, setSelectedArtist] = useState('');
@@ -74,45 +75,47 @@ const addMusique = () => {
 
   useEffect(() => {
     if (selectedArtist) {
-      const albumsRef = ref(db, 'album');
-      const q = query(albumsRef, orderByChild('artist').equalTo(selectedArtist));
-      get(q)
-        .then(snapshot => {
+      const albumsRef = ref(db, `artist/${selectedArtist}`);
+      get(albumsRef)
+        .then((snapshot) => {
           const albums = [];
-          snapshot.forEach(childSnapshot => {
-            const album = childSnapshot.val();
+          snapshot.forEach((childSnapshot) => {
+            const album = childSnapshot.key;
             albums.push(album);
           });
           setAlbums(albums);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     }
   }, [selectedArtist]);
-  const handleArtistChange = event => {
-    const selectedArtist = event.target.value;
+  const handleArtistChange = () => {
+
+    const selectedArtist = selected
     setSelectedArtist(selectedArtist);
     // appel de la fonction pour récupérer les albums de l'artiste sélectionné
     fetchAlbumsByArtist(selectedArtist);
   };
 
-  const fetchAlbumsByArtist = artist => {
-    const albumsRef = ref(db, 'album');
-    const q = query(albumsRef, orderByChild('artist').equalTo(artist));
-    get(q)
-      .then(snapshot => {
+  const fetchAlbumsByArtist = (artistName) => {
+    const albumsRef = ref(db, `artist/${artistName}/`);
+    console.log("test")
+    get(albumsRef)
+      .then((snapshot) => {
         const albums = [];
-        snapshot.forEach(childSnapshot => {
+        snapshot.forEach((childSnapshot) => {
           const album = childSnapshot.val();
           albums.push(album);
         });
+        console.log("les albums sont" && album)
         setAlbums(albums);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
+  
 
 
   // Récupérer une référence de stockage
@@ -162,10 +165,6 @@ const addMusique = () => {
             return fileName.replace(/[.$#\[\]\/]/g, '_');
           }
 
-          const databaseRef = firebase
-            .database()
-            .ref(`audios/artiste/${artiste}/${album}`)
-            .push();
           const artistRef = ref(db, `artist/${artiste}`);
           const albumRef = ref(db, `artist/${artiste}/${album}`);
           const musicRef = ref(
@@ -234,7 +233,7 @@ const addMusique = () => {
         data={artists}
         save="value"
         placeholder="Selectionez un artiste"
-        onChange={handleArtistChange}
+        onSelect={handleArtistChange}
       />
 
 
@@ -252,20 +251,28 @@ const addMusique = () => {
         onChangeText={text => setArtiste(text)}
       />
       ) : null}
+
+
       <SelectList
         setSelected={val => setSelected(val)}
         data={albums}
         save="value"
         placeholder="Selectionez un album"
       />
-     
+      <Text>L'album n'existe pas dans la liste?</Text>
+      <CheckBox
+        disabled={false}
+        value={isSelected2}
+        onValueChange={newValue => setSelection2(newValue)}
+      />
+     {isSelected2 ? (
       
         <TextInput
           placeholder="Album"
           value={album}
           onChangeText={text => setAlbum(text)}
         />
-      
+        ) : null}
 
       <StyledTouchableOpacity onPress={handleAudioSelect}>
         <StyledText>

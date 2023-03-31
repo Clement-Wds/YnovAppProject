@@ -21,5 +21,7 @@ const StyledButton = styled.TouchableOpacity`
   border-radius: 5px;
   align-items: center;
   margin-bottom: 20px;
+  justify-content: center;
+  width: 100%;
 `;
 export default Index;

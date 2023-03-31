@@ -1,84 +1,26 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
 import {useTranslation} from 'react-i18next';
-import {AntDesign} from '@expo/vector-icons';
-import {MaterialIcons} from '@expo/vector-icons';
-import firebase from '../../../firebase';
 
 const HomeScreen = () => {
-  const [playlists, setPlaylists] = useState([]);
-  useEffect(() => {
-    const fetchPlaylists = async () => {
-      const playlistsRef = firebase.firestore().collection('playlists');
-      const snapshot = await playlistsRef.get();
-      const playlistsData = snapshot.docs.map(doc => doc.data());
-      setPlaylists(playlistsData);
-    };
-    fetchPlaylists();
-  }, []);
-
   const {t} = useTranslation();
-
-  const RecentlyPlayed = [
-    {
-      id: 1,
-      title: 'Song Title 1',
-      artist: 'Artist Name 1',
-      image: 'https://picsum.photos/id/876/200/200',
-    },
-    {
-      id: 2,
-      title: 'Song Title 2',
-      artist: 'Artist Name 2',
-      image: 'https://picsum.photos/id/877/200/200',
-    },
-    {
-      id: 3,
-      title: 'Song Title 3',
-      artist: 'Artist Name 3',
-      image: 'https://picsum.photos/id/878/200/200',
-    },
-    {
-      id: 4,
-      title: 'Song Title 4',
-      artist: 'Artist Name 4',
-      image: 'https://picsum.photos/id/879/200/200',
-    },
-  ];
 
   return (
     <ContainerScrollView>
-      <MainTitle>
-        <AntDesign name="user" size={24} color="white" />
-      </MainTitle>
+      <MainTitle></MainTitle>
       <SectionTitle>
-        <MaterialIcons name="history" size={24} color="white" />
         <Title>{t('resources.home.recentlyPlayed')}</Title>
       </SectionTitle>
-      <RecentlyPlayedContainer horizontal>
-        {RecentlyPlayed.map(item => (
-          <RecentlyPlayedItem key={item.id}>
-            <CoverImage source={{uri: item.image}} />
-            <SongTitle>{item.title}</SongTitle>
-            <ArtistName>{item.artist}</ArtistName>
-          </RecentlyPlayedItem>
-        ))}
-      </RecentlyPlayedContainer>
+      <RecentlyPlayedContainer horizontal></RecentlyPlayedContainer>
 
       <SectionTitle>
-        <MaterialIcons name="playlist-play" size={24} color="white" />
         <Title>{t('resources.home.playlists')}</Title>
       </SectionTitle>
       <PlaylistContainer>
-        <PlaylistList horizontal>
-          {playlists.map(playlist => (
-            <PlaylistImage key={playlist.id} source={{uri: playlist.image}} />
-          ))}
-        </PlaylistList>
+        <PlaylistList horizontal></PlaylistList>
       </PlaylistContainer>
 
       <SectionTitle>
-        <MaterialIcons name="album" size={24} color="white" />
         <Title>{t('resources.home.albums')}</Title>
       </SectionTitle>
       <Albums>

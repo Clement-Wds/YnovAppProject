@@ -16,6 +16,10 @@ import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 
+import { getDatabase, ref, set } from "firebase/database";
+import 'firebase/auth';
+import 'firebase/firestore';
+
 const RegisterPage = () => {
   const {t} = useTranslation();
   const navigation = useNavigation();
@@ -31,20 +35,37 @@ const RegisterPage = () => {
     password: '',
     password_confirmation: '',
   });
+
   const HandleRegister = () => {
     if (inputs.password == inputs.password_confirmation) {
       createUserWithEmailAndPassword(auth, inputs.email, inputs.password)
         .then(userCredential => {
           // Signed in
           const user = userCredential.user;
+          const db = getDatabase();
+          const userRef = ref(db, 'users/' + user.uid);
 
-          return userCredential.user.getIdToken();
+          // Enregistrer les informations de l'utilisateur dans la base de données
+          const userData = {
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            //others
+          };
+
+          return set(userRef, userData);
+
+          //return userCredential.user.getIdToken(); ->OLD CODE CLEM
           // ...
         })
-        .then(accessToken => {
-          //AsyncStorage.setItem('token', accessToken);
-          console.log(accessToken);
+        .then(() => {
+          console.log('Utilisateur enregistré avec succès dans la base de données Firebase');
         })
+        // .then(accessToken => {
+        //   //AsyncStorage.setItem('token', accessToken);
+        //   console.log(accessToken)
+          
+        // }) -> OLD CODE CLEM d
         .catch(error => {
           const errorCode = error.code;
           const errorMessage = error.message;
@@ -54,6 +75,7 @@ const RegisterPage = () => {
       console.log('Les mots de passes ne correspondent pas ');
     }
   };
+  
   const createUserWithGoogle = () => {
     GoogleSignin.signIn()
       .then(({idToken, accessToken}) => {

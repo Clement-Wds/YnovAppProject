@@ -23,5 +23,21 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 - Utilisation de l'appareil photo pour créer une photo de profil + photo de pochette d'album
 - Système multilingue
 
+## Deadline 1 :
+- Routeur
+- Authentification simple
+- Authentification par Google
+- Système multilingue
+- Lecteur de musique
+- Utilisation de Notifee
+
+## Deadline 2 Finale :
+- CRUD Profil FINI
+- CRUD Musique FINI
+- Utilisation du GPS pour localiser le pays de l'utilisateur et gérer le blocage des musiques par zone géographique
+- Utilisation de l'appareil photo pour créer une photo de profil + photo de pochette d'album
+- Gestionnaire de la bibliothèque de musique
+- Lecteur de musique version finale et propre
+
 ## Bonus :
 - Détecter le thème utilisateur

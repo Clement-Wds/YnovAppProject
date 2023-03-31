@@ -1,4 +1,7 @@
 import React, {useEffect, useState} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {profileDetailsRequest} from "../../actions/profile";
+
 import styled from 'styled-components/native';
 import {getAuth, onAuthStateChanged, signOut} from 'firebase/auth';
 
@@ -8,12 +11,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const ProfileScreen = () => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
+
+  const dispatch = useDispatch();
+  const profileState = useSelector(state => state.profile.user);
+
   const [token, setToken] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
       if (user) {
-        setUser(user);
+        //UTILISATION DE REDUX pour afficher l'utilisateur
+        dispatch(profileDetailsRequest(user));
+        //setUser(user);
         AsyncStorage.getItem('token').then(token => {
           setToken(token);
         });
@@ -37,7 +46,7 @@ const ProfileScreen = () => {
   return (
     <Container>
       <ProfileInfo>
-        <ProfileName>{user?.email}</ProfileName>
+        <ProfileName>{profileState.email}</ProfileName>
         <ProfileFollowers>1,000 followers</ProfileFollowers>
         <ProfileDescription>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed

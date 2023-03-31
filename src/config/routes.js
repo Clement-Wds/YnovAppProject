@@ -69,7 +69,7 @@ const BottomTabNavigator = () => {
         name={t('resources.register.title')}
         component={Register}
         options={{
-          tabBarIcon: () => <Logo source={require('../assets/user.png')} />,
+          tabBarIcon: () => <Logo source={require('../assets/log-in.png')} />,
         }}
       />
       <Tab.Screen

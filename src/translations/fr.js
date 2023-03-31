@@ -38,6 +38,19 @@ export default {
       register: {
         title: "S'inscrire",
         description: "Ceci est la page d'inscription",
+        email: 'Email',
+        password: 'Mot de passe',
+        passwordConfirm: 'Confirmer le mot de passe',
+        alreadyHaveAccount: 'Vous avez déjà un compte ? Connectez-vous ici !',
+        google: "S'inscrire avec Google",
+      },
+      login: {
+        title: "S'identifier",
+        description: 'Ceci est la page de connexion',
+        email: 'Email',
+        password: 'Mot de passe',
+        alreadyHaveAccount: "Vous n'avez pas de compte ? Inscrivez-vous ici !",
+        google: "S'identifier avec Google",
       },
       addMusique: {
         title: 'Ajouter de la musique',

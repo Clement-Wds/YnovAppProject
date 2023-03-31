@@ -36,8 +36,20 @@ export default {
       },
       register: {
         title: 'Register',
+        email: 'Email',
+        password: 'Password',
+        passwordConfirm: 'Confirm Password',
         description: 'This is the register page',
+        alreadyHaveAccount: 'Already have an account ? Login Here!',
       },
+      login: {
+        title: 'Login',
+        email: 'Email',
+        password: 'Password',
+        description: 'This is the register page',
+        alreadyHaveAccount: "You don't have an account ? Register Here!",
+      },
+
       addMusique: {
         title: 'Add Music',
         description: 'This is the add music page',

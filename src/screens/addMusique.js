@@ -48,6 +48,8 @@ const addMusique = () => {
   const [artiste, setArtiste] = useState('');
   const [album, setAlbum] = useState('');
   const [selected, setSelected] = useState('');
+  const [selected2, setSelected2] = useState('');
+
   const [isSelected, setSelection] = useState(false);
   const [isSelected2, setSelection2] = useState(false);
 
@@ -74,6 +76,7 @@ const addMusique = () => {
   }, []);
 
   useEffect(() => {
+    
     if (selectedArtist) {
       const albumsRef = ref(db, `artist/${selectedArtist}`);
       get(albumsRef)
@@ -165,11 +168,18 @@ const addMusique = () => {
             return fileName.replace(/[.$#\[\]\/]/g, '_');
           }
 
-          const artistRef = ref(db, `artist/${artiste}`);
-          const albumRef = ref(db, `artist/${artiste}/${album}`);
+
+          if(isSelected){
+            console.log("check box chéque")
+          }else{
+            console.log("check box pas chéque")
+          }
+
+          const artistRef = ref(db, `artist/${isSelected ? artiste :selected}`);
+          const albumRef = ref(db, `artist/${isSelected ? artiste :selected}/${isSelected2 ? album : selected2}`);
           const musicRef = ref(
             db,
-            `artist/${artiste}/${album}/${cleanFileName(audioFile[0].name)}`,
+            `artist/${isSelected ? artiste :selected}/${isSelected2 ? album : selected2}/${cleanFileName(audioFile[0].name)}`,
           );
 
           Promise.all([get(artistRef), get(albumRef), get(musicRef)])
@@ -228,6 +238,7 @@ const addMusique = () => {
 
   return (
     <View>
+      {!isSelected ? (
       <SelectList
         setSelected={val => setSelected(val)}
         data={artists}
@@ -235,6 +246,7 @@ const addMusique = () => {
         placeholder="Selectionez un artiste"
         onSelect={handleArtistChange}
       />
+      ) : null}
 
 
       <Text>L'artiste n'existe pas dans la liste?</Text>
@@ -252,13 +264,14 @@ const addMusique = () => {
       />
       ) : null}
 
-
+{!isSelected2 ? (
       <SelectList
-        setSelected={val => setSelected(val)}
+        setSelected={val => setSelected2(val)}
         data={albums}
         save="value"
         placeholder="Selectionez un album"
       />
+      ) : null}
       <Text>L'album n'existe pas dans la liste?</Text>
       <CheckBox
         disabled={false}

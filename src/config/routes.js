@@ -27,16 +27,16 @@ const MainStackNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name={t('resources.home.title')} component={Home} />
-      <Stack.Screen name={t('resources.search.title')} component={Search} />
-      <Stack.Screen name={t('resources.library.title')} component={Library} />
-      <Stack.Screen name={t('resources.register.title')} component={Register} />
+      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="Library" component={Library} />
+      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen
         name={t('resources.addMusique.title')}
         component={AddMusique}
       />
       <Stack.Screen name={t('resources.profil.title')} component={Profil} />
-      <Stack.Screen name={t('resources.login.title')} component={Login} />
+      <Stack.Screen name="Register" component={Register} />
     </Stack.Navigator>
   );
 };

@@ -1,5 +1,5 @@
 import HomeScreen from '../components/HomePage';
-import Input from '../components/textInput';
+import TextInput from '../components/textInput';
 import styled from 'styled-components';
 import config from '../../firebase';
 import {initializeApp} from 'firebase/app';
@@ -11,9 +11,11 @@ import Button from '../components/button';
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 
 const Register = () => {
+  const navigation = useNavigation();
     GoogleSignin.configure({
         webClientId:
           '395678982785-gmjfppo8ujm5f34i0ene0ivo6rh26k59.apps.googleusercontent.com',
@@ -37,7 +39,8 @@ const Register = () => {
               // ...
             })
             .then(accessToken => {
-              AsyncStorage.setItem('token', accessToken);
+              //AsyncStorage.setItem('token', accessToken);
+              console.log(accessToken)
               
             })
             .catch(error => {
@@ -62,7 +65,7 @@ const Register = () => {
                   photoURL,
                 }, { merge: true });
                 
-                return AsyncStorage.setItem('token', idToken);
+                return console.log(idToken)//AsyncStorage.setItem('token', idToken);
               })
               .then(() => {
                 
@@ -87,17 +90,17 @@ const Register = () => {
 
   return (
   <Container>
-        <Input
+        <TextInput
                 placeholder="Email"
                 value={inputs.email}
                 onChangeText={text => setInputs({...inputs, email: text})}
             />
-            <Input
+            <TextInput
                 placeholder="Password"
                 value={inputs.password}
                 onChangeText={text => setInputs({...inputs, password: text})}
             />
-            <Input
+            <TextInput
                 placeholder="Password Confirmation"
                 value={inputs.password_confirmation}
                 onChangeText={text =>
@@ -109,7 +112,12 @@ const Register = () => {
         
         onPress={HandleRegister}
         
-      />
+      /><Button
+        title="Go To Login"
+      
+        onPress={() => navigation.navigate('Login')}
+      
+    />
       <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Light}

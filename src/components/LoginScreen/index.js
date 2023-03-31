@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import styled from 'styled-components/native';
@@ -7,6 +6,8 @@ import {initializeApp} from 'firebase/app';
 import firebaseConfig from '../../../firebase';
 import {Alert} from 'react-native';
 import '@react-native-firebase/firestore';
+import { firebase } from '@react-native-firebase/auth';
+
 import {
   GoogleSignin,
   statusCodes,
@@ -21,59 +22,97 @@ const LoginScreen = () => {
   });
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+
   const navigation = useNavigation();
   const [inputs, setInputs] = useState({
     email: '',
     password: '',
   });
 
+
+
+  
+
   const handleLogin = () => {
+   
     signInWithEmailAndPassword(auth, inputs.email, inputs.password)
       .then(userCredential => {
         // Signed in
         const user = userCredential.user;
-        console.log(user);
+       
         return userCredential.user.getIdToken();
         // ...
       })
       .then(accessToken => {
-        AsyncStorage.setItem('token', accessToken);
-        navigation.navigate('Home');
+        //AsyncStorage.setItem('token', accessToken);
+        //navigation.navigate('Home');
+        console.log("good"&& accessToken)
       })
       .catch(error => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        Alert.alert('Erreur', errorMessage);
+        if (errorCode === 'auth/user-not-found') {
 
-        console.log(errorCode, errorMessage);
+          Alert.alert('Error', 'User not found, check email and try again', [
+            
+            {text: 'OK'},
+          ]);
+          
+        } else if (errorCode === 'auth/wrong-password') {
+          Alert.alert('Error', 'Wrong password, check password and try again', [
+            
+            {text: 'OK'},
+          ]);
+        }else if (errorCode === 'auth/invalid-email'){
+          Alert.alert('Error', 'Invalid email address, check email and try again', [
+            
+            {text: 'OK'},
+          ]);
+
+        } else {
+          console.log(errorMessage);
+        }
       });
   };
-  const loginUserWithGoogle = () => {
-    GoogleSignin.signIn()
-      .then(({idToken, accessToken}) => {
-        const googleCredential =
-          firebase.auth.GoogleAuthProvider.credential(idToken);
-        return firebase
 
-          .auth()
-          .signInWithCredential(googleCredential)
-          .then(({user}) => {
-            return user.getIdToken();
-          })
-          .then(accessToken => {
-            AsyncStorage.setItem('token', accessToken);
-            navigation.navigate('Home');
-          });
+
+  
+  const loginUserWithGoogle = () => {
+    let idToken; // Déclarer une variable pour stocker idToken
+    
+    GoogleSignin.signIn()
+      .then(({ idToken: token, accessToken }) => { // Stocker le token dans la variable
+        idToken = token; // Affecter la valeur du token à la variable idToken
+        const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken);
+        return firebase.auth().signInWithCredential(googleCredential);
       })
-      .catch(error => {
+      .then(({ user }) => {
+        console.log(user);
+        const { uid, displayName, email, photoURL } = user;
+        firebase.firestore().collection('users').doc(uid).set({
+          displayName,
+          email,
+          photoURL,
+        }, { merge: true });
+        
+        return console.log(idToken) //AsyncStorage.setItem('token', idToken); // Stocker idToken dans AsyncStorage
+      })
+      .then(() => {
+        
+        
+        //navigation.navigate('Home')
+        
+        Alert.alert('Success', 'You have successfully signed in!');
+      })
+      .catch((error) => {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-          // user cancelled the login flow
+          Alert.alert('Cancelled', 'Sign-in was cancelled!');
         } else if (error.code === statusCodes.IN_PROGRESS) {
-          // operation (e.g. sign in) is in progress already
+          Alert.alert('Error', 'Another sign-in is in progress!');
         } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-          // play services not available or outdated
+          Alert.alert('Error', 'Google Play services not available!');
         } else {
-          // some other error happened
+          Alert.alert('Error', 'Something went wrong!' + error);
         }
       });
   };
@@ -100,10 +139,13 @@ const LoginScreen = () => {
         <Button onPress={handleLogin}>
           <ButtonText>Connexion</ButtonText>
         </Button>
-        <GoogleSigninButton
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
-          onPress={loginUserWithGoogle}></GoogleSigninButton>
+
+        <Button onPress={loginUserWithGoogle}>
+          <ButtonText>Connexion avec Google</ButtonText>
+        </Button>
+
+
+
         <RegisterLink onPress={() => navigation.navigate('Register')}>
           <RegisterText>
             Vous n'avez pas encore de compte ? Inscrivez vous !

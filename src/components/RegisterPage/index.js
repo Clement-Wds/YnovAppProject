@@ -11,16 +11,19 @@ import {
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 import Button from '../../components/button';
-import React,{useEffect}from 'react';
+import React,{useEffect, useState}from 'react';
 
-import {Alert,PermissionsAndroid} from 'react-native';
+import {Alert,PermissionsAndroid,Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set,get } from "firebase/database";
 import 'firebase/auth';
 import 'firebase/firestore';
-import Geolocation from '@react-native-community/geolocation';
+//import Geolocation from '@react-native-community/geolocation'; pour avoir la locatio exact
+import * as RNLocalize from 'react-native-localize';
+import CheckBox from '@react-native-community/checkbox';
+
 import {requestMultiple} from 'react-native-permissions';
 
 const RegisterPage = () => {
@@ -43,6 +46,10 @@ const RegisterPage = () => {
     offlineAccess: false,
   });
   const app = initializeApp(config);
+  const [isSelected, setSelection] = useState(false);
+  const [isSelected2, setSelection2] = useState(false);
+
+
   const auth = getAuth(app);
   const [inputs, setInputs] = React.useState({
     email: '',
@@ -53,25 +60,29 @@ const RegisterPage = () => {
     longitude:'',
     latitude:''
   })
+  const[codePays, setCodePays] = useState('');
 
   const GetPosition = async () =>{
 
     try {
       await requestPermissions();
-      Geolocation.getCurrentPosition(
+      setCodePays(RNLocalize.getCountry())
+      //Code pour récupérer coordonée exact 
+      // Geolocation.getCurrentPosition(
    
-        (position) => {
-          setPositionGPS({...positionGPS, latitude: position.coords.latitude})
-          setPositionGPS({...positionGPS, longitude: position.coords.longitude})
-          console.log(positionGPS.latitude);
-          console.log(positionGPS.longitude);
-        },
-        (error) => {
-          console.log(error.code, error.message);
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      //   (position) => {
+      //     setPositionGPS({...positionGPS, latitude: position.coords.latitude})
+      //     setPositionGPS({...positionGPS, longitude: position.coords.longitude})
+      //     console.log(positionGPS.latitude);
+      //     console.log(positionGPS.longitude);
+      //     console.log(codePays);
+      //   },
+      //   (error) => {
+      //     console.log(error.code, error.message);
+      //   },
+      //   { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       
-      );
+      // );
 
     }catch (err) {
       console.log('Error selecting audio file: ', err);
@@ -87,6 +98,7 @@ const RegisterPage = () => {
           // Signed in
           const user = userCredential.user;
           const db = getDatabase();
+          GetPosition()
           const userRef = ref(db, 'users/' + user.uid);
 
           // Enregistrer les informations de l'utilisateur dans la base de données
@@ -94,6 +106,7 @@ const RegisterPage = () => {
             email: user.email,
             displayName: user.displayName,
             photoURL: user.photoURL,
+            pays: codePays
             //others
           };
 
@@ -130,16 +143,33 @@ const RegisterPage = () => {
           .signInWithCredential(googleCredential)
           .then(({user}) => {
             const {uid, displayName, email, photoURL} = user;
-            firebase.firestore().collection('users').doc(uid).set(
-              {
-                displayName,
-                email,
-                photoURL,
-              },
-              {merge: true},
-            );
-
-            return console.log(idToken); //AsyncStorage.setItem('token', idToken);
+            const db = getDatabase();
+            const userRef = ref(db, 'users/' + uid);
+            const userData = {
+              displayName,
+              email,
+              photoURL,
+              pays: codePays
+            };
+            return get(userRef).then(snapshot => {
+              if (snapshot.exists()) {
+                // L'utilisateur existe déjà dans la base de données
+                const existingData = snapshot.val();
+                const mergedData = {
+                  ...existingData,
+                  ...userData,
+                };
+                // Mettre à jour les informations existantes avec les nouvelles données fusionnées
+                return set(userRef, mergedData).then(() => {
+                  console.log('Utilisateur fusionné avec succès dans la base de données Firebase');
+                });
+              } else {
+                // L'utilisateur n'existe pas encore dans la base de données
+                return set(userRef, userData).then(() => {
+                  console.log('Utilisateur enregistré avec succès dans la base de données Firebase');
+                });
+              }
+            });
           })
           .then(() => {
             Alert.alert('Success', 'Your account was created successfully!');
@@ -173,20 +203,31 @@ const RegisterPage = () => {
         placeholder={t('resources.register.password')}
         value={inputs.password}
         //hide password
-        secureTextEntry={true}
+        secureTextEntry={isSelected ? false : true}
         onChangeText={text => setInputs({...inputs, password: text})}
+      />
+      <Text>Show PassWord?</Text>
+      <CheckBox
+        disabled={false}
+        value={isSelected}
+        onValueChange={newValue => setSelection(newValue)}
       />
       <TextInput
         placeholder={t('resources.register.passwordConfirm')}
         value={inputs.password_confirmation}
         //hide password
-        secureTextEntry={true}
+        secureTextEntry={isSelected2 ? false : true}
         onChangeText={text =>
           setInputs({...inputs, password_confirmation: text})
         }
       />
+      <Text>Show PassWord Confirmation?</Text>
+      <CheckBox
+        disabled={false}
+        value={isSelected2}
+        onValueChange={newValue => setSelection2(newValue)}
+      />
       <Button title={t('resources.register.title')} onPress={HandleRegister} />
-      <Button title={t('resources.register.title')} onPress={GetPosition} />
       <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Light}

@@ -4,11 +4,12 @@ import styled from 'styled-components/native';
 import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import firebaseConfig from '../../../firebase';
-import {Alert} from 'react-native';
+import {Alert,Text} from 'react-native';
 import '@react-native-firebase/firestore';
 import {firebase} from '@react-native-firebase/auth';
 import Button from '../../components/button';
 import {useTranslation} from 'react-i18next';
+import CheckBox from '@react-native-community/checkbox';
 
 import {
   GoogleSignin,
@@ -31,6 +32,8 @@ const LoginScreen = () => {
     email: '',
     password: '',
   });
+  const [isSelected, setSelection] = useState(false);
+
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, inputs.email, inputs.password)
@@ -128,9 +131,15 @@ const LoginScreen = () => {
         <Input
           placeholder={t('resources.login.password')}
           value={inputs.password}
-          secureTextEntry
+          secureTextEntry={isSelected ? false : true}
           onChangeText={text => setInputs({...inputs, password: text})}
         />
+      <Text>Show PassWord?</Text>
+      <CheckBox
+        disabled={false}
+        value={isSelected}
+        onValueChange={newValue => setSelection(newValue)}
+      />
         <Button title={t('resources.login.title')} onPress={handleLogin} />
 
         <GoogleSigninButton
@@ -141,6 +150,10 @@ const LoginScreen = () => {
 
         <RegisterLink onPress={() => navigation.navigate('Register')}>
           <RegisterText>{t('resources.login.alreadyHaveAccount')}</RegisterText>
+        </RegisterLink>
+
+        <RegisterLink onPress={() => navigation.navigate('ForgotPassword')}>
+          <RegisterText>Forgot Password ?</RegisterText>
         </RegisterLink>
       </ContainerView>
     </Container>

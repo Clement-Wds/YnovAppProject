@@ -14,6 +14,7 @@ const ProfileScreen = () => {
 
   const dispatch = useDispatch();
   const profileState = useSelector(state => state.profile.user);
+  console.log("STATE : " + profileState);
 
   const [token, setToken] = useState(null);
 
@@ -22,6 +23,7 @@ const ProfileScreen = () => {
       if (user) {
         //UTILISATION DE REDUX pour afficher l'utilisateur
         dispatch(profileDetailsRequest(user));
+        console.log("STATE IF USER : " + profileState);
         //setUser(user);
         AsyncStorage.getItem('token').then(token => {
           setToken(token);
@@ -31,22 +33,22 @@ const ProfileScreen = () => {
       }
     });
     return unsubscribe;
-  }, [auth]);
+  }, [user]);
 
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        setUser(null);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
+  // const handleSignOut = () => {
+  //   signOut(auth)
+  //     .then(() => {
+  //       setUser(null);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // };
 
   return (
     <Container>
       <ProfileInfo>
-        <ProfileName>{profileState.email}</ProfileName>
+        <ProfileName>{profileState?.email}</ProfileName>
         <ProfileFollowers>1,000 followers</ProfileFollowers>
         <ProfileDescription>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed

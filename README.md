@@ -47,3 +47,4 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 
 ## Bonus :
 - Détecter le thème utilisateur
+- Authentification par Google (OAuth)

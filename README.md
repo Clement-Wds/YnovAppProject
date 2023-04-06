@@ -22,6 +22,9 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 - Utilisation du GPS pour localiser le pays de l'utilisateur et gérer le blocage des musiques par zone géographique
 - Utilisation de l'appareil photo pour créer une photo de profil + photo de pochette d'album
 - Système multilingue
+- Reset Password
+- stokage du code pays
+- gestion de la musique
 
 ## Deadline 1 :
 - Routeur
@@ -29,7 +32,9 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 - Authentification par Google
 - Système multilingue
 - Lecteur de musique
-- Utilisation de Notifee
+- Reset Password
+- stokage du code pays
+- gestion de la musique
 
 ## Deadline 2 Finale :
 - CRUD Profil FINI
@@ -38,6 +43,7 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 - Utilisation de l'appareil photo pour créer une photo de profil + photo de pochette d'album
 - Gestionnaire de la bibliothèque de musique
 - Lecteur de musique version finale et propre
+- Utilisation de Notifee
 
 ## Bonus :
 - Détecter le thème utilisateur

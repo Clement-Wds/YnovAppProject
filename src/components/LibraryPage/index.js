@@ -22,7 +22,7 @@ const LibraryScreen = () => {
           .storage()
           .ref()
           .child(
-            'audio/artiste/The Weeknd Vs Alesso _ One Republic - Save Your Tears Vs If I Lose Myself (Djs From Mars Bootleg).mp3',
+            'audio/artiste/Palmashow/Napz x SZH/Napz x SZH En Avance - Palmashow.mp3',
           );
         const audioURL = await storageRef.getDownloadURL(); // URL de votre fichier audio Firebase
         const audio = new Sound(audioURL, '', error => {
@@ -36,7 +36,7 @@ const LibraryScreen = () => {
         const coverRef = firebase
           .storage()
           .ref()
-          .child('audio/covers/cover.jpg');
+          .child('audio/artiste/Palmashow/Napz x SZH/Palmashow.jpg');
         const coverURL = await coverRef.getDownloadURL(); // URL de la cover de votre fichier audio Firebase
         setCoverUrl(coverURL);
       } catch (error) {

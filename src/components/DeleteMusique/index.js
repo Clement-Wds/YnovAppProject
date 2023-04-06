@@ -30,12 +30,20 @@ if (!firebase.apps.length) {
 }
 const app = initializeApp(config);
 const db = getDatabase(app);
-const [selected, setSelected] = useState('');
-const [selected2, setSelected2] = useState('');
-const [artists, setArtists] = useState([]);
-const [albums, setAlbums] = useState([]);
 
 const DeleteMusique = () => {
+
+  const [album, setAlbum] = useState('');
+  const [selected, setSelected] = useState('');
+  const [selected2, setSelected2] = useState('');
+
+  const [artists, setArtists] = useState([]);
+  const [selectedArtist, setSelectedArtist] = useState('');
+
+  const [albums, setAlbums] = useState([]);
+  const [isSelected, setSelection] = useState(false);
+  const [isSelected2, setSelection2] = useState(false);
+
   useEffect(() => {
     const artistRef = ref(db, 'artist');
     get(artistRef)
@@ -79,7 +87,6 @@ const DeleteMusique = () => {
 
   const fetchAlbumsByArtist = artistName => {
     const albumsRef = ref(db, `artist/${artistName}/`);
-    console.log('test');
     get(albumsRef)
       .then(snapshot => {
         const albums = [];
@@ -97,6 +104,21 @@ const DeleteMusique = () => {
 
   return (
     <View>
+      <Text>Supprimer un artiste</Text>
+      <CheckBox
+        disabled={false}
+        value={isSelected}
+        onValueChange={newValue => setSelection(newValue)}
+      />
+
+      <Text>Supprimer un album</Text>
+      <CheckBox
+        disabled={false}
+        value={isSelected}
+        onValueChange={newValue => setSelection(newValue)}
+      />
+
+
       <SelectList
           setSelected={val => setSelected(val)}
           data={artists}

@@ -20,6 +20,7 @@ import DocumentPicker from 'react-native-document-picker';
 import {requestMultiple} from 'react-native-permissions';
 import {getDatabase} from 'firebase/database';
 import {ref, set, get, query, orderByChild, equalTo} from 'firebase/database';
+import {useNavigation} from '@react-navigation/native';
 
 import {SelectList} from 'react-native-dropdown-select-list';
 import CheckBox from '@react-native-community/checkbox';
@@ -60,6 +61,7 @@ const addMusique = () => {
   const [selectedArtist, setSelectedArtist] = useState('');
 
   const [albums, setAlbums] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const artistRef = ref(db, 'artist');
@@ -362,6 +364,7 @@ const addMusique = () => {
       </StyledTouchableOpacity>
 
       <Button title="Télécharger" onPress={handleUpload} />
+      <Button title="Supprimer une musique" onPress={() => navigation.navigate('DeleteMusique')} />
     </View>
   );
 };

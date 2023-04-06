@@ -1,65 +1,58 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, FlatList} from 'react-native';
 import {initializeApp} from 'firebase/app';
-import {ref, get, query, orderByChild, equalTo} from 'firebase/database';
+import {ref, get} from 'firebase/database';
 import {getDatabase} from 'firebase/database';
-import {firebase} from '@react-native-firebase/auth';
 import styled from 'styled-components/native';
+import AudioPlayer from '../../components/AudioPlayer';
 import config from '../../../firebase';
+import {firebase} from '@react-native-firebase/auth';
 
+// Initialize Firebase app
 if (!firebase.apps.length) {
-  firebase.initializeApp(config);
+  initializeApp(config);
 }
-const app = initializeApp(config);
-const db = getDatabase(app);
+const db = getDatabase();
 
-const AlbumScreen = ({route}) => {
-  const [albums, setAlbums] = useState([]);
-  const {artist} = route.params;
+const AlbumScreenCard = ({route}) => {
+  const {title, artist} = route.params;
+  const [tracks, setTracks] = useState([]);
+  const [album, setAlbum] = useState('');
 
   useEffect(() => {
-    const albumRef = ref(db, 'album');
-    const artistQuery = query(
-      albumRef,
-      orderByChild('artist'),
-      equalTo(artist),
-    );
-    get(artistQuery)
+    const albumRef = ref(db, `artist/${artist}/${title}`);
+    get(albumRef)
       .then(snapshot => {
-        const albums = [];
+        const tracks = [];
         snapshot.forEach(childSnapshot => {
-          const album = {
-            key: childSnapshot.key,
-            ...childSnapshot.val(),
-          };
-          albums.push(album);
+          const track = childSnapshot.val();
+          tracks.push(track);
         });
-        setAlbums(albums);
+        setTracks(tracks);
+        setAlbum(title);
       })
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [artist, title]);
 
   const renderItem = ({item}) => {
     return (
-      <TouchableOpacity
-        onPress={() => console.log('Album selected:', item.title)}>
-        <AlbumWrapper>
-          <AlbumTitle>{item.title}</AlbumTitle>
-        </AlbumWrapper>
-      </TouchableOpacity>
+      <TrackWrapper>
+        <TrackTitle>{item.title}</TrackTitle>
+        <AudioPlayer source={{uri: item.audioUrl}} />
+      </TrackWrapper>
     );
   };
 
   return (
     <Container>
+      <AlbumTitle>{album}</AlbumTitle>
       <ArtistName>{artist}</ArtistName>
-      <FlatList
-        data={albums}
+      <TrackList
+        data={tracks}
         renderItem={renderItem}
-        keyExtractor={item => item.key}
-        contentContainerStyle={{paddingBottom: 20}}
+        keyExtractor={(item, index) => `${index}`}
       />
     </Container>
   );
@@ -71,35 +64,37 @@ const Container = styled.View`
   padding: 20px;
 `;
 
-const ArtistName = styled.Text`
+const AlbumTitle = styled.Text`
   color: #fff;
   font-size: 24px;
   font-weight: bold;
+  margin-bottom: 10px;
+`;
+
+const ArtistName = styled.Text`
+  color: #b3b3b3;
+  font-size: 18px;
   margin-bottom: 20px;
 `;
 
-const AlbumWrapper = styled.View`
+const TrackList = styled.FlatList`
+  flex: 1;
+  padding: 10px;
+`;
+
+const TrackWrapper = styled.View`
   align-items: center;
-  margin-bottom: 20px;
+  background-color: #1e1e1e;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 10px;
 `;
 
-const AlbumImage = styled.Image`
-  height: 150px;
-  width: 150px;
-  border-radius: 75px;
-`;
-
-const AlbumTitle = styled.Text`
+const TrackTitle = styled.Text`
   color: #fff;
   font-size: 18px;
   font-weight: bold;
-  margin-top: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 `;
 
-const AlbumYear = styled.Text`
-  color: #b3b3b3;
-  font-size: 14px;
-`;
-
-export default AlbumScreen;
+export default AlbumScreenCard;

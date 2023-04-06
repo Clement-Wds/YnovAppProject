@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import * as React from 'react';
 import {useState} from 'react';
 import styled from 'styled-components';
-import Home from '../screens/home';
+import HomeScreen from '../screens/home';
 import Search from '../screens/search';
 import Library from '../screens/library';
 import Header from '../components/header';
@@ -16,7 +16,8 @@ import Profil from '../screens/profl';
 import Login from '../screens/login';
 import DeleteMusique from '../components/DeleteMusique';
 import ForgotPassword from '../screens/forgotPassword';
-import Album from '../screens/album';
+import AlbumScreen from '../screens/album';
+import AlbumScreenCard from '../screens/albumSong';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -27,7 +28,7 @@ const MainStackNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="Library" component={Library} />
       <Stack.Screen name="Login" component={Login} />
@@ -35,7 +36,8 @@ const MainStackNavigator = () => {
       <Stack.Screen name="Profil" component={Profil} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="DeleteMusique" component={DeleteMusique} />
-      <Stack.Screen name="Album" component={Album} />
+      <Stack.Screen name="Album" component={AlbumScreen} />
+      <Stack.Screen name="AlbumCard" component={AlbumScreenCard} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
     </Stack.Navigator>
   );

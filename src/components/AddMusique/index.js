@@ -43,7 +43,6 @@ const requestPermissions = async () => {
 const addMusique = () => {
   useEffect(() => {
     requestPermissions();
-    
   }, []);
 
   const [audioFile, setAudioFile] = useState(null);
@@ -223,8 +222,6 @@ const addMusique = () => {
             return fileName.replace(/[.$#\[\]\/]/g, '_');
           }
 
-         
-
           const artistRef = ref(
             db,
             `artist/${isSelected ? artiste : selected}`,
@@ -364,7 +361,10 @@ const addMusique = () => {
       </StyledTouchableOpacity>
 
       <Button title="Télécharger" onPress={handleUpload} />
-      <Button title="Supprimer une musique" onPress={() => navigation.navigate('DeleteMusique')} />
+      <Button
+        title="Supprimer une musique"
+        onPress={() => navigation.navigate('DeleteMusique')}
+      />
     </View>
   );
 };

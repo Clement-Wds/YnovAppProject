@@ -5,6 +5,7 @@ export default {
         title: 'Home',
         description: 'This is the home page',
         playlists: 'Playlists',
+        artists: 'Artists',
         albums: 'Albums',
         recentlyPlayed: 'Recently Played',
         trackName: 'Track: {{name}}',

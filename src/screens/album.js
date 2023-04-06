@@ -18,20 +18,12 @@ const AlbumScreen = ({route}) => {
   const {artist} = route.params;
 
   useEffect(() => {
-    const albumRef = ref(db, 'album');
-    const artistQuery = query(
-      albumRef,
-      orderByChild('artist'),
-      equalTo(artist),
-    );
-    get(artistQuery)
+    const albumRef = ref(db, `artist/${artist}`);
+    get(albumRef)
       .then(snapshot => {
         const albums = [];
         snapshot.forEach(childSnapshot => {
-          const album = {
-            key: childSnapshot.key,
-            ...childSnapshot.val(),
-          };
+          const album = childSnapshot.key;
           albums.push(album);
         });
         setAlbums(albums);
@@ -39,7 +31,7 @@ const AlbumScreen = ({route}) => {
       .catch(error => {
         console.log(error);
       });
-  }, [artist]); // <= ajout de artist ici
+  }, []);
 
   const renderItem = ({item}) => {
     return (
@@ -55,12 +47,11 @@ const AlbumScreen = ({route}) => {
   return (
     <Container>
       <ArtistName>{artist}</ArtistName>
-      <AlbumList
-        data={albums}
-        renderItem={renderItem}
-        keyExtractor={item => item.key}
-        contentContainerStyle={{paddingBottom: 20}}
-      />
+      {albums.map((album, index) => (
+        <AlbumWrapper key={index}>
+          <AlbumTitle>{album}</AlbumTitle>
+        </AlbumWrapper>
+      ))}
     </Container>
   );
 };

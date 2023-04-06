@@ -16,6 +16,7 @@ import Profil from '../screens/profl';
 import Login from '../screens/login';
 import DeleteMusique from '../components/DeleteMusique';
 import ForgotPassword from '../screens/forgotPassword';
+import Album from '../screens/album';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +35,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name="Profil" component={Profil} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="DeleteMusique" component={DeleteMusique} />
-
+      <Stack.Screen name="Album" component={Album} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
     </Stack.Navigator>
   );

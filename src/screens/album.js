@@ -5,7 +5,7 @@ import {ref, get, query, orderByChild, equalTo} from 'firebase/database';
 import {getDatabase} from 'firebase/database';
 import {firebase} from '@react-native-firebase/auth';
 import styled from 'styled-components/native';
-import config from '../../../firebase';
+import config from '../../firebase';
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
@@ -39,7 +39,7 @@ const AlbumScreen = ({route}) => {
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [artist]); // <= ajout de artist ici
 
   const renderItem = ({item}) => {
     return (
@@ -55,7 +55,7 @@ const AlbumScreen = ({route}) => {
   return (
     <Container>
       <ArtistName>{artist}</ArtistName>
-      <FlatList
+      <AlbumList
         data={albums}
         renderItem={renderItem}
         keyExtractor={item => item.key}
@@ -77,16 +77,15 @@ const ArtistName = styled.Text`
   font-weight: bold;
   margin-bottom: 20px;
 `;
+const AlbumList = styled.FlatList`
+  flex: 1;
+  width: 100%;
+  color: ${props => props.theme.colors.main};
+`;
 
 const AlbumWrapper = styled.View`
   align-items: center;
   margin-bottom: 20px;
-`;
-
-const AlbumImage = styled.Image`
-  height: 150px;
-  width: 150px;
-  border-radius: 75px;
 `;
 
 const AlbumTitle = styled.Text`
@@ -95,11 +94,6 @@ const AlbumTitle = styled.Text`
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 5px;
-`;
-
-const AlbumYear = styled.Text`
-  color: #b3b3b3;
-  font-size: 14px;
 `;
 
 export default AlbumScreen;

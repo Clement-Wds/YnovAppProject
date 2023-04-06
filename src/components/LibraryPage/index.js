@@ -1,178 +1,102 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
+import {View, Text} from 'react-native';
+import {initializeApp} from 'firebase/app';
+import {ref, set, get, query, orderByChild, equalTo} from 'firebase/database';
+import 'firebase/storage';
+import {getDatabase} from 'firebase/database';
+import {firebase} from '@react-native-firebase/auth';
+import config from '../../../firebase';
 import styled from 'styled-components/native';
-import {useTranslation} from 'react-i18next';
-import Sound from 'react-native-sound';
-import {firebase} from '@react-native-firebase/storage';
-import Slider from '@react-native-community/slider';
+import {useNavigation} from '@react-navigation/native';
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(config);
+}
+const app = initializeApp(config);
+const db = getDatabase(app);
 
 const LibraryScreen = () => {
-  const {t} = useTranslation();
-  const [sound, setSound] = useState(null);
-  const [duration, setDuration] = useState(0);
-  const [position, setPosition] = useState(0);
-  const [paused, setPaused] = useState(true);
-  const [coverUrl, setCoverUrl] = useState(null);
-
-  const app = firebase.app();
+  const [artists, setArtists] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchAudio = async () => {
-      try {
-        const storageRef = firebase
-          .storage()
-          .ref()
-          .child(
-            'audio/artiste/Palmashow/Napz x SZH/Napz x SZH En Avance - Palmashow.mp3',
-          );
-        const audioURL = await storageRef.getDownloadURL(); // URL de votre fichier audio Firebase
-        const audio = new Sound(audioURL, '', error => {
-          if (error) {
-            console.log('error loading audio', error);
-          } else {
-            setSound(audio);
-            setDuration(audio.getDuration());
-          }
+    const artistRef = ref(db, 'artist');
+    get(artistRef)
+      .then(snapshot => {
+        const artists = [];
+        snapshot.forEach(childSnapshot => {
+          const artist = childSnapshot.key;
+          artists.push(artist);
         });
-        const coverRef = firebase
-          .storage()
-          .ref()
-          .child('audio/artiste/Palmashow/Napz x SZH/Palmashow.jpg');
-        const coverURL = await coverRef.getDownloadURL(); // URL de la cover de votre fichier audio Firebase
-        setCoverUrl(coverURL);
-      } catch (error) {
-        console.log('error loading audio', error);
-      }
-    };
-
-    fetchAudio();
-
-    return () => {
-      if (sound) {
-        sound.release();
-      }
-    };
+        setArtists(artists);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }, []);
 
-  const handlePlaySound = async () => {
-    try {
-      if (paused) {
-        await sound.play();
-        setPaused(false);
-        setInterval(() => {
-          sound.getCurrentTime(seconds => setPosition(seconds));
-        }, 1000);
-      } else {
-        await sound.pause();
-        setPaused(true);
-      }
-    } catch (error) {
-      console.log('error playing sound', error);
-    }
+  const handleArtistPress = artist => {
+    navigation.navigate('Album', {artist});
   };
-
-  const formatTime = time => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  };
-
   return (
     <Container>
-      <TopContainer>
-        {coverUrl && <CoverImage source={{uri: coverUrl}} />}
-        <Title>{t('resources.library.title')}</Title>
-      </TopContainer>
-      <Button onPress={handlePlaySound}>
-        {paused ? (
-          <PlayLogo source={require('../../assets/play.png')} />
-        ) : (
-          <PlayLogo source={require('../../assets/pause.png')} />
-        )}
-      </Button>
-      <ProgressBarContainer>
-        <ProgressBar
-          maximumValue={duration}
-          value={position}
-          minimumTrackTintColor={'#FFFFFF'}
-          maximumTrackTintColor={'#000000'}
-          thumbTintColor={'#FFFFFF'}
-          disabled={paused}
-          formatText={formatTime}
-          animateTransitions
-        />
-        <ProgressTime>{formatTime(position)}</ProgressTime>
-        <DurationTime>{formatTime(duration)}</DurationTime>
-      </ProgressBarContainer>
+      <Title>Your Library</Title>
+      {artists.map(artist => (
+        <StyledTouchableOpacity
+          key={artist}
+          onPress={() => handleArtistPress(artist)}>
+          <ArtistWrapper key={artist}>
+            <Initial>{artist.charAt(0)}</Initial>
+            <ArtistName>{artist}</ArtistName>
+          </ArtistWrapper>
+        </StyledTouchableOpacity>
+      ))}
     </Container>
   );
 };
 
 const Container = styled.View`
+  background-color: #121212;
   flex: 1;
-  background-color: ${props => props.theme.colors.background};
-  align-items: center;
-  justify-content: center;
+  padding: 20px;
 `;
 
-const PlayLogo = styled.Image`
-  width: 30px;
-  height: 30px;
-  margin-bottom: 20px;
-`;
-
-const TopContainer = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-`;
-
-const CoverImage = styled.Image`
-  width: 200px;
-  height: 200px;
-  border-radius: 100px;
-  margin-bottom: 20px;
+const StyledTouchableOpacity = styled.TouchableOpacity`
+  margin-bottom: 10px;
 `;
 
 const Title = styled.Text`
-  font-size: 20px;
-  color: #ffffff;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
 `;
 
-const Button = styled.TouchableOpacity`
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
-  background-color: ${props => props.theme.colors.main};
+const ArtistName = styled.Text`
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 10px;
+`;
+
+const Initial = styled.Text`
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: #1db954;
+  text-align: center;
+  line-height: 40px;
+`;
+
+const ArtistWrapper = styled.View`
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-`;
-
-const ProgressBarContainer = styled.View`
-  flex: 1;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin-top: 20px;
-`;
-
-const ProgressBar = styled(Slider)`
-  width: 100%;
-  height: 20px;
-`;
-
-const ProgressTime = styled.Text`
-  color: ${props => props.theme.colors.dark};
-  margin-top: 10px;
-  text-align: left;
-  width: 100%;
-`;
-
-const DurationTime = styled.Text`
-  color: ${props => props.theme.colors.dark};
-  margin-top: 10px;
-  text-align: right;
-  width: 100%;
+  border-bottom-width: 1px;
+  border-color: #282828;
+  padding-bottom: 10px;
 `;
 
 export default LibraryScreen;

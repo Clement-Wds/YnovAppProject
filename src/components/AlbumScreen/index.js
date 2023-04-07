@@ -35,6 +35,8 @@ const AlbumScreen = () => {
       .catch(error => {
         console.log(error);
       });
+      
+      
   }, []);
 
   return (
@@ -53,7 +55,7 @@ const AlbumScreen = () => {
               onPress={() =>
                 navigation.navigate('AlbumCard', {
                   title: item,
-                  album: albums,
+                  artist: artist,
                 })
               }>
               <AlbumTitle>{item}</AlbumTitle>

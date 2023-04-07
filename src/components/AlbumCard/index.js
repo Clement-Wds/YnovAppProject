@@ -7,6 +7,7 @@ import styled from 'styled-components/native';
 import AudioPlayer from '../../components/AudioPlayer';
 import config from '../../../firebase';
 import {firebase} from '@react-native-firebase/auth';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 // Initialize Firebase app
 if (!firebase.apps.length) {
@@ -14,10 +15,13 @@ if (!firebase.apps.length) {
 }
 const db = getDatabase();
 
-const AlbumScreenCard = ({route}) => {
+const AlbumScreenCard = () => {
+  const route = useRoute();
+
   const {title, artist} = route.params;
   const [tracks, setTracks] = useState([]);
   const [album, setAlbum] = useState('');
+  const [musiques, setMusiques] = useState([])
 
   useEffect(() => {
     const albumRef = ref(db, `artist/${artist}/${title}`);
@@ -35,12 +39,32 @@ const AlbumScreenCard = ({route}) => {
         console.log(error);
       });
   }, [artist, title]);
+  
+
+  
+
+  useEffect(() => {
+    const storageRef = firebase.storage().ref();
+    const albumDocRef = storageRef.child(`audio/artiste/${artist}/${title}`);
+    albumDocRef.listAll().then((res) => {
+      const mp3Files = res.items.filter((item) => item.name.endsWith('.mp3'));
+      const fileNames = mp3Files.map((file) => file.name);
+      const filePaths = mp3Files.map((file) => `audio/artiste/${artist}/${title}/${file.name}`);
+
+      setMusiques(filePaths);
+    }).catch((error) => {
+      console.error(error);
+    });
+  }, []);
+  console.log(musiques)
+
+
 
   const renderItem = ({item}) => {
     return (
       <TrackWrapper>
         <TrackTitle>{item.title}</TrackTitle>
-        <AudioPlayer source={{uri: item.audioUrl}} />
+        {/* <AudioPlayer source={{uri: item.audioUrl}} /> */}
       </TrackWrapper>
     );
   };
@@ -50,7 +74,7 @@ const AlbumScreenCard = ({route}) => {
       <AlbumTitle>{album}</AlbumTitle>
       <ArtistName>{artist}</ArtistName>
       <TrackList
-        data={tracks}
+        data={musiques}
         renderItem={renderItem}
         keyExtractor={(item, index) => `${index}`}
       />

@@ -1,7 +1,12 @@
 import { PROFILE_DETAILS_REQUEST } from "../actions/profile";
 
 const initialState = {
-    user: null
+    user: {
+        displayName: null,
+        email: null,
+        pays: null,
+        photoURL: null,
+    },
 }
 
 const profileDetailsReducers = (state = initialState, action) => {

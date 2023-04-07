@@ -23,7 +23,7 @@ const Header = () => {
         </TouchableOpacity>
       </LeftContainer>
       <RightContainer>
-      <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
           <Logo source={require('../../assets/user.png')} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Library')}>

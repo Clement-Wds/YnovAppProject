@@ -11,6 +11,9 @@ import Button from '../../components/button';
 import {useTranslation} from 'react-i18next';
 import CheckBox from '@react-native-community/checkbox';
 
+import { useSelector, useDispatch } from 'react-redux';
+import {profileDetailsRequest} from "../../actions/profile";
+
 import {
   GoogleSignin,
   statusCodes,
@@ -26,6 +29,8 @@ const LoginScreen = () => {
   });
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+
+  const dispatch = useDispatch();
 
   const navigation = useNavigation();
   const [inputs, setInputs] = useState({
@@ -75,17 +80,22 @@ const LoginScreen = () => {
   const loginUserWithGoogle = () => {
     let idToken; // Déclarer une variable pour stocker idToken
 
+    
+
     GoogleSignin.signIn()
       .then(({idToken: token, accessToken}) => {
         // Stocker le token dans la variable
         idToken = token; // Affecter la valeur du token à la variable idToken
-        const googleCredential =
-          firebase.auth.GoogleAuthProvider.credential(idToken);
+        const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken);
         return firebase.auth().signInWithCredential(googleCredential);
       })
       .then(({user}) => {
         console.log(user);
+
         const {uid, displayName, email, photoURL} = user;
+
+        dispatch(profileDetailsRequest(user));
+
         firebase.firestore().collection('users').doc(uid).set(
           {
             displayName,
@@ -141,12 +151,12 @@ const LoginScreen = () => {
         onValueChange={newValue => setSelection(newValue)}
       />
         <Button title={t('resources.login.title')} onPress={handleLogin} />
-
-        <GoogleSigninButton
+        <Button title="Se connecter avec Google" onPress={loginUserWithGoogle} />
+        {/* <GoogleSigninButton
           size={GoogleSigninButton.Size.Wide}
           color={GoogleSigninButton.Color.Light}
           onPress={loginUserWithGoogle}
-        />
+        /> */}
 
         <RegisterLink onPress={() => navigation.navigate('Register')}>
           <RegisterText>{t('resources.login.alreadyHaveAccount')}</RegisterText>

@@ -7,6 +7,7 @@ import {getAuth, onAuthStateChanged, signOut} from 'firebase/auth';
 
 //Get the user's profile information from Firebase
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { compose } from 'redux';
 
 const ProfileScreen = () => {
   const auth = getAuth();
@@ -14,14 +15,18 @@ const ProfileScreen = () => {
 
   const dispatch = useDispatch();
   const profileState = useSelector(state => state.profile.user);
+  console.log("STATE : " + profileState);
+  console.log("IMAGE : " + profileState.photoURL);
 
   const [token, setToken] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
+
       if (user) {
         //UTILISATION DE REDUX pour afficher l'utilisateur
         dispatch(profileDetailsRequest(user));
+
         //setUser(user);
         AsyncStorage.getItem('token').then(token => {
           setToken(token);
@@ -31,34 +36,28 @@ const ProfileScreen = () => {
       }
     });
     return unsubscribe;
-  }, [auth]);
-
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        setUser(null);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
+  }, [user]);
 
   return (
     <Container>
       <ProfileInfo>
-        <ProfileName>{profileState.email}</ProfileName>
-        <ProfileFollowers>1,000 followers</ProfileFollowers>
-        <ProfileDescription>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-          tincidunt, nisl eget ultricies tincidunt, nisl nisl aliquet mauris,
-          nec lacinia nunc nisl eget nunc. Sed tincidunt, nisl eget ultricies
-          tincidunt, nisl nisl aliquet mauris, nec lacinia nunc nisl eget nunc.
-        </ProfileDescription>
+        <ProfileImage src={profileState?.photoURL} />
+        <ProfileName>Bonjour {profileState?.displayName}</ProfileName>
+        {/* <ProfileFollowers>1,000 followers</ProfileFollowers> */}
+        <ProfileText>
+          Nom d'utilisateur : {profileState?.displayName}
+        </ProfileText>
+        <ProfileText>
+          Email : {profileState?.email}
+        </ProfileText>
+        <ProfileText>
+          Pays : {profileState?.pays}
+        </ProfileText>
       </ProfileInfo>
-      <PlaylistSection>
+      {/* <PlaylistSection>
         <SectionTitle>PLAYLISTS</SectionTitle>
         <PlaylistList></PlaylistList>
-      </PlaylistSection>
+      </PlaylistSection> */}
     </Container>
   );
 };
@@ -80,6 +79,9 @@ const ProfileImage = styled.Image`
   height: 120px;
   border-radius: 60px;
   margin-bottom: 16px;
+  background-image: url(${props => props.image});
+  background-size: cover;
+  background-position: center;
 `;
 
 const ProfileName = styled.Text`
@@ -93,11 +95,11 @@ const ProfileFollowers = styled.Text`
   font-size: ${props => props.theme.fontSizes.medium};
   margin-bottom: 16px;
   color: ${props => props.theme.text.main};
+  white-space: pre-line;
 `;
 
-const ProfileDescription = styled.Text`
+const ProfileText = styled.Text`
   font-size: 14px;
-  text-align: center;
   color: ${props => props.theme.text.lightGrey};
 `;
 

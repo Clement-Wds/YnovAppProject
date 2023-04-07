@@ -38,24 +38,71 @@ const HomeScreen = () => {
       });
   }, []);
 
+
+  //Fonction Faouizi
+
+
+  // useEffect(() => {
+  //   const albumsRef = ref(db, 'artist');
+  //   get(albumsRef)
+  //     .then(snapshot => {
+  //       const albums = [];
+  //       snapshot.forEach(childSnapshot => {
+  //         const artistAlbums = childSnapshot.val();
+  //         Object.keys(artistAlbums).forEach(album => {
+  //           albums.push(album);
+  //         });
+  //       });
+  //       setAlbums(albums);
+  //       console.log(albums);
+
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  //   //Récuperer l'image de l'album
+  // }, []);
+
   useEffect(() => {
     const albumsRef = ref(db, 'artist');
-    get(albumsRef)
-      .then(snapshot => {
-        const albums = [];
-        snapshot.forEach(childSnapshot => {
-          const artistAlbums = childSnapshot.val();
-          Object.keys(artistAlbums).forEach(album => {
-            albums.push(album);
+  
+    get(albumsRef).then(snapshot => {
+      const albumPromises = [];
+      snapshot.forEach(childSnapshot => {
+        const artistAlbums = childSnapshot.val();
+        Object.keys(artistAlbums).forEach(albumKey => {
+          const albumRef = ref(db, `artist/${childSnapshot.key}/${albumKey}`);
+          const albumPromise = get(albumRef).then(albumSnapshot => {
+            const albumData = albumSnapshot.val();
+            const albumName = albumData.name || albumKey;
+            const albumPhotoRef = firebase.storage().ref(`audio/artiste/${childSnapshot.key}/${albumName}/photo`);
+            
+            return albumPhotoRef.list().then(res => {
+              if (res.items.length === 0) {
+                console.log(`No photo found for album ${albumName}`);
+                return { name: albumName, photo: null };
+              }
+              return res.items[0].getDownloadURL().then(url => {
+                return { name: albumName, photo: url };
+              });
+            }).catch(error => {
+              console.log(`Error getting download URL for album ${albumName}: `, error);
+              return { name: albumName, photo: null };
+            });
           });
+          albumPromises.push(albumPromise);
         });
-        setAlbums(albums);
-      })
-      .catch(error => {
-        console.log(error);
       });
-    //Récuperer l'image de l'album
+      Promise.all(albumPromises).then(albums => {
+        setAllAlbums(albums.filter(album => album.photo !== null));
+      });
+    }).catch(error => {
+      console.log('Error getting albums:', error);
+    });
   }, []);
+  console.log(allAlbums)
+  
+
 
   const handleArtistPress = artist => {
     navigation.navigate('Album', {artist});
@@ -91,21 +138,19 @@ const HomeScreen = () => {
         <Title>{t('resources.home.albums')}</Title>
       </SectionTitle>
       <ArtistList horizontal>
-        {albums.map(album => (
-          <StyledTouchableOpacity
-            key={album}
-            onPress={() => console.log('Album selected:', album)}>
-            <AlbumItem key={album}>
-              <CoverImage
-                source={{
-                  uri: 'https://th.bing.com/th/id/R.d18d3a164ae5c25af0e37c47fb9691a5?rik=llRrX6QhdCIfPA&pid=ImgRaw&r=0',
-                }}
-              />
-              <SongTitle>{album}</SongTitle>
-            </AlbumItem>
-          </StyledTouchableOpacity>
-        ))}
-      </ArtistList>
+  {allAlbums.map(album => (
+    <StyledTouchableOpacity
+      key={album.name}
+      onPress={() => console.log('Album selected:', album)}>
+      <AlbumItem key={album.name}>
+        <CoverImage
+          source={{ uri: album.photo }}
+        />
+        <SongTitle>{album.name}</SongTitle>
+      </AlbumItem>
+    </StyledTouchableOpacity>
+  ))}
+</ArtistList>
     </ContainerScrollView>
   );
 };

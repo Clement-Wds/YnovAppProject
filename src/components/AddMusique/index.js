@@ -195,7 +195,7 @@ const addMusique = () => {
 
           if (photoFile && isSelected2) {
             const photoFileRef = storageRef.child(
-              `audio/artiste/${isSelected ? artiste : selected}/${album}/${
+              `audio/artiste/${isSelected ? artiste : selected}/${album}/photo/${
                 photoFile[0].name
               }`,
             );

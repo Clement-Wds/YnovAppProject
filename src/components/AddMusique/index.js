@@ -77,6 +77,8 @@ const addMusique = () => {
       .catch(error => {
         console.log(error);
       });
+     
+      
   }, []);
 
   useEffect(() => {
@@ -222,8 +224,6 @@ const addMusique = () => {
           function cleanFileName(fileName) {
             return fileName.replace(/[.$#\[\]\/]/g, '_');
           }
-
-         
 
           const artistRef = ref(
             db,

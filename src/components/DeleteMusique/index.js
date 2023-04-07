@@ -14,12 +14,11 @@ import '@react-native-firebase/auth';
 import '@react-native-firebase/storage';
 import 'firebase/storage';
 import '@react-native-firebase/database';
-import TextInput from '../textInput';
 import styled from 'styled-components/native';
-import DocumentPicker from 'react-native-document-picker';
 import {requestMultiple} from 'react-native-permissions';
 import {getDatabase} from 'firebase/database';
-import {ref, set, get, query, orderByChild, equalTo} from 'firebase/database';
+import {ref , set, get, query, orderByChild, equalTo} from 'firebase/database';
+import firestore from "@react-native-firebase/firestore";
 
 import {SelectList} from 'react-native-dropdown-select-list';
 import CheckBox from '@react-native-community/checkbox';
@@ -42,7 +41,6 @@ const DeleteMusique = () => {
 
   const [albums, setAlbums] = useState([]);
   const [isSelected, setSelection] = useState(false);
-  const [isSelected2, setSelection2] = useState(false);
 
   useEffect(() => {
     const artistRef = ref(db, 'artist');
@@ -102,15 +100,82 @@ const DeleteMusique = () => {
       });
   };
 
+
+  const handleDelete = async () => {
+    if (selectedArtist) {
+      const artistRef = ref(db, `artist/${selectedArtist}`);
+      const storageRef = firebase.storage().ref();
+
+  
+      if (isSelected && selected2) {
+        const albumRef = ref(db, `artist/${selectedArtist}/${selected2}`);
+  
+        // Delete album document from Firestore
+       
+          const albumDocRef = storageRef.child(`audio/artiste/${selectedArtist}/${selected2}`);
+          albumDocRef.listAll().then((res)=>{
+            res.items.forEach((itemRef)=>{
+              itemRef.delete().then(()=>{
+                console.log('File deleted Successfully');
+              }).catch((error)=>{
+                console.error(error);
+              });
+            });
+          }).catch((error)=>{
+            console.error(error);
+          });
+        
+  
+        // // Delete album from Realtime Database
+         set(albumRef, null)
+           .then(() =>
+             console.log("Album deleted successfully from Realtime Database!")
+           )
+           .catch((error) => console.log(error));
+
+
+      } else {
+        // Delete all albums of the artist from Firestore
+       
+  
+        // Delete artist document from Firestore
+        const artistDocRef =  storageRef.child(
+          `audio/artiste/${selectedArtist}/`
+        );
+
+        artistDocRef.listAll().then((res) => {
+          res.prefixes.forEach((albumRef) => {
+            albumRef.listAll().then((albumRes) => {
+              albumRes.items.forEach((itemRef) => {
+                itemRef.delete().then(() => {
+                  console.log('File deleted successfully!');
+                }).catch((error) => {
+                  console.error(error);
+                });
+              });
+            }).catch((error) => {
+              console.error(error);
+            });
+          });
+        }).catch((error) => {
+          console.error(error);
+        });
+        
+        
+  
+        // Delete artist from Realtime Database
+         set(artistRef, null)
+           .then(() =>
+             console.log("Artist deleted successfully from Realtime Database!")
+           )
+           .catch((error) => console.log(error));
+      }
+    }
+  };
+  
   return (
     <View>
-      <Text>Supprimer un artiste</Text>
-      <CheckBox
-        disabled={false}
-        value={isSelected}
-        onValueChange={newValue => setSelection(newValue)}
-      />
-
+      
       <Text>Supprimer un album</Text>
       <CheckBox
         disabled={false}
@@ -126,6 +191,7 @@ const DeleteMusique = () => {
           placeholder="Selectionez un artiste"
           onSelect={handleArtistChange}
         />
+        {isSelected ?(
 
         <SelectList
           setSelected={val => setSelected2(val)}
@@ -133,17 +199,14 @@ const DeleteMusique = () => {
           save="value"
           placeholder="Selectionez un album"
         />
+        ):null}
 
 
 
       
-      <Text>Delete Musique </Text>
-
-
-
 
       
-      <Button title="Télécharger" />
+      <Button title="Supprimer" onPress={handleDelete} />
     </View>
   );
 };

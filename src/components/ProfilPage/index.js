@@ -8,6 +8,7 @@ import {getAuth, onAuthStateChanged, signOut} from 'firebase/auth';
 //Get the user's profile information from Firebase
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { compose } from 'redux';
+import CheckBox from '@react-native-community/checkbox';
 
 const ProfileScreen = () => {
   const auth = getAuth();
@@ -16,7 +17,6 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
   const profileState = useSelector(state => state.profile.user);
   console.log("STATE : " + profileState);
-  console.log("IMAGE : " + profileState.photoURL);
 
   const [token, setToken] = useState(null);
 
@@ -54,8 +54,14 @@ const ProfileScreen = () => {
           Pays : {profileState?.pays}
         </ProfileText>
         <ProfileText>
-          IsAdmin : {profileState?.isAdmin}
+          IsAdmin : 
         </ProfileText>
+        <CheckBox
+        disabled={false}
+        value={profileState?.isAdmin}
+        
+      />
+       
       </ProfileInfo>
       {/* <PlaylistSection>
         <SectionTitle>PLAYLISTS</SectionTitle>

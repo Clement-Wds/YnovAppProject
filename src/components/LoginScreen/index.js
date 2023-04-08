@@ -96,10 +96,8 @@ const LoginScreen = () => {
   
       const {uid, displayName, email, photoURL} = user;
   
-      dispatch(profileDetailsRequest(user));
   
       // Récupérer les informations de l'utilisateur à partir de la base de données en temps réel de Firebase
-      const db = getDatabase();
       return get(ref(db, `users/${uid}`));
     })
     .then((snapshot) => {

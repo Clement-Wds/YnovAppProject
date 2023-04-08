@@ -4,7 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {TouchableWithoutFeedback} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import * as React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import HomeScreen from '../screens/home';
 import Search from '../screens/search';
@@ -18,6 +18,14 @@ import DeleteMusique from '../components/DeleteMusique';
 import ForgotPassword from '../screens/forgotPassword';
 import AlbumScreen from '../screens/album';
 import AlbumScreenCard from '../screens/albumSong';
+import Logout from '../screens/logout';
+
+import {useSelector, useDispatch} from 'react-redux';
+import {profileDetailsRequest} from '../../src/actions/profile';
+import {getAuth, onAuthStateChanged, signOut} from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {compose} from 'redux';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -39,12 +47,37 @@ const MainStackNavigator = () => {
       <Stack.Screen name="Album" component={AlbumScreen} />
       <Stack.Screen name="AlbumCard" component={AlbumScreenCard} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen name="Logout" component={Logout} />
     </Stack.Navigator>
   );
 };
 
 const BottomTabNavigator = () => {
   const {t} = useTranslation();
+  const auth = getAuth();
+  const [user, setUser] = useState(null);
+
+  const dispatch = useDispatch();
+  const profileState = useSelector(state => state.profile.user);
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, user => {
+      if (user) {
+        //UTILISATION DE REDUX pour afficher l'utilisateur
+        dispatch(profileDetailsRequest(user));
+
+        //setUser(user);
+        AsyncStorage.getItem('token').then(token => {
+          setToken(token);
+        });
+      } else {
+        setUser(null);
+      }
+    });
+    return unsubscribe;
+  }, [user]);
+
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -71,23 +104,36 @@ const BottomTabNavigator = () => {
           tabBarIcon: () => <Logo source={require('../assets/library.png')} />,
         }}
       />
+      {profileState?.isAdmin ? (
+        <Tab.Screen
+          name={t('resources.addMusique.title')}
+          component={AddMusique}
+          options={{
+            tabBarIcon: () => (
+              <Logo source={require('../assets/plus-circle.png')} />
+            ),
+          }}
+        />
+      ) : null}
 
-      <Tab.Screen
-        name={t('resources.register.title')}
-        component={Register}
-        options={{
-          tabBarIcon: () => <Logo source={require('../assets/log-in.png')} />,
-        }}
-      />
-      <Tab.Screen
-        name={t('resources.addMusique.title')}
-        component={AddMusique}
-        options={{
-          tabBarIcon: () => (
-            <Logo source={require('../assets/plus-circle.png')} />
-          ),
-        }}
-      />
+      {!profileState?.email ? (
+        <Tab.Screen
+          name={t('resources.register.title')}
+          component={Register}
+          options={{
+            tabBarIcon: () => <Logo source={require('../assets/log-in.png')} />,
+          }}
+        />
+      ) : (
+        <Tab.Screen
+          name={t('resources.logout.title')}
+          component={Logout}
+          options={{
+            tabBarIcon: () => <Logo source={require('../assets/logout.png')} />,
+          }}
+        />
+      )}
+      
     </Tab.Navigator>
   );
 };

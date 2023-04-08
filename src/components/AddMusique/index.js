@@ -46,7 +46,9 @@ const addMusique = () => {
   }, []);
 
   const [audioFile, setAudioFile] = useState(null);
-  const [photoFile, setPhotoFile] = useState(null);
+  const [photoAlbumFile, setPhotoAlbumFile] = useState(null);
+  const [photoArtistFile, setPhotoArtistFile] = useState(null);
+
 
   const [artiste, setArtiste] = useState('');
   const [album, setAlbum] = useState('');
@@ -128,10 +130,10 @@ const addMusique = () => {
   useEffect(
     () => {
       console.log(audioFile);
-      console.log(photoFile);
+      console.log(photoAlbumFile);
     },
     [audioFile],
-    [photoFile],
+    [photoAlbumFile],
   );
 
   const handleAudioSelect = async () => {
@@ -151,7 +153,7 @@ const addMusique = () => {
     }
   };
 
-  const handlePhotoSelect = async () => {
+  const handlePhotoAlbumSelect = async () => {
     try {
       await requestPermissions();
 
@@ -162,7 +164,24 @@ const addMusique = () => {
         mode: 'open',
       });
 
-      setPhotoFile(result);
+      setPhotoAlbumFile(result);
+    } catch (err) {
+      console.log('Error selecting photo file: ', err);
+    }
+  };
+
+  const handlePhotoArtistSelect = async () => {
+    try {
+      await requestPermissions();
+
+      const result = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images],
+        copyTo: 'documentDirectory',
+        multiple: false,
+        mode: 'open',
+      });
+
+      setPhotoArtistFile(result);
     } catch (err) {
       console.log('Error selecting photo file: ', err);
     }
@@ -193,14 +212,14 @@ const addMusique = () => {
 
           const downloadURL = await fileRef.getDownloadURL();
 
-          if (photoFile && isSelected2) {
-            const photoFileRef = storageRef.child(
+          if (photoAlbumFile && isSelected2) {
+            const photoAlbumFileRef = storageRef.child(
               `audio/artiste/${isSelected ? artiste : selected}/${album}/photo/${
-                photoFile[0].name
+                photoAlbumFile[0].name
               }`,
             );
-            const photoTask = photoFileRef.putFile(photoFile[0].fileCopyUri);
-            photoTask.on(
+            const photoAlbumTask = photoAlbumFileRef.putFile(photoAlbumFile[0].fileCopyUri);
+            photoAlbumTask.on(
               'state_changed',
               snapshot => {
                 // Handle upload progress if needed
@@ -215,11 +234,40 @@ const addMusique = () => {
               async () => {
                 // Handle successful upload
 
-                const photoDownloadURL = await photoFileRef.getDownloadURL();
+                const photoDownloadURL = await photoAlbumFileRef.getDownloadURL();
                 // Do something with the photo download URL
               },
             );
           }
+          if (photoArtistFile && isSelected) {
+            const photoArtistFileRef = storageRef.child(
+              `audio/artiste/${artiste}/photo/${
+                photoArtistFile[0].name
+              }`,
+            );
+            const photoArtistTask = photoArtistFileRef.putFile(photoArtistFile[0].fileCopyUri);
+            photoArtistTask.on(
+              'state_changed',
+              snapshot => {
+                // Handle upload progress if needed
+                const progress =
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log(`Upload is ${progress}% done`);
+              },
+              error => {
+                // Handle errors during upload if needed
+                console.error(error);
+              },
+              async () => {
+                // Handle successful upload
+
+                const photoArtistDownloadURL = await photoArtistFileRef.getDownloadURL();
+                // Do something with the photo download URL
+              },
+            );
+          }
+
+
           function cleanFileName(fileName) {
             return fileName.replace(/[.$#\[\]\/]/g, '_');
           }
@@ -288,7 +336,7 @@ const addMusique = () => {
 
           console.log('hey');
           setAudioFile(null);
-          setPhotoFile(null);
+          setPhotoAlbumFile(null);
           setArtiste(null);
           setAlbum(null);
           setSelection(null);
@@ -298,6 +346,10 @@ const addMusique = () => {
     } else {
       console.log('Invalid audio file uri or file type');
     }
+  };
+  const handleSelection = (newValue) => {
+    setSelection(newValue);
+    setSelection2(newValue);
   };
 
   return (
@@ -316,15 +368,24 @@ const addMusique = () => {
       <CheckBox
         disabled={false}
         value={isSelected}
-        onValueChange={newValue => setSelection(newValue)}
+        onValueChange={handleSelection}
       />
 
       {isSelected ? (
+        <>
         <TextInput
           placeholder="Artiste"
           value={artiste}
           onChangeText={text => setArtiste(text)}
         />
+        <StyledTouchableOpacity onPress={handlePhotoArtistSelect}>
+          <StyledText>
+            {photoArtistFile ? photoArtistFile[0].name : `Sélectionner une photo pour l'artist`}
+          </StyledText>
+        </StyledTouchableOpacity>
+
+        </>
+
       ) : null}
 
       {!isSelected2 ? (
@@ -350,9 +411,9 @@ const addMusique = () => {
       ) : null}
 
       {isSelected2 ? (
-        <StyledTouchableOpacity onPress={handlePhotoSelect}>
+        <StyledTouchableOpacity onPress={handlePhotoAlbumSelect}>
           <StyledText>
-            {photoFile ? photoFile[0].name : 'Sélectionner une photo'}
+            {photoAlbumFile ? photoAlbumFile[0].name : `Sélectionner une photo pour l'album`}
           </StyledText>
         </StyledTouchableOpacity>
       ) : null}

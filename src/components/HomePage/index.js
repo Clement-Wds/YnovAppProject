@@ -19,6 +19,8 @@ const HomeScreen = () => {
   const [artists, setArtists] = useState([]);
   const [albums, setAlbums] = useState([]);
   const [allAlbums, setAllAlbums] = useState([]);
+  const [allArtists, setAllArtists] = useState([]);
+
   const {t} = useTranslation();
   const navigation = useNavigation();
 
@@ -73,6 +75,7 @@ const HomeScreen = () => {
         Object.keys(artistAlbums).forEach(albumKey => {
           const albumRef = ref(db, `artist/${childSnapshot.key}/${albumKey}`);
           const albumPromise = get(albumRef).then(albumSnapshot => {
+
             const albumData = albumSnapshot.val();
             const albumName = albumData.name || albumKey;
             const albumPhotoRef = firebase.storage().ref(`audio/artiste/${childSnapshot.key}/${albumName}/photo`);
@@ -101,6 +104,42 @@ const HomeScreen = () => {
     });
   }, []);
   console.log(allAlbums)
+
+  useEffect(() => {
+    const artistsRef = ref(db, 'artist');
+    
+    get(artistsRef).then(snapshot => {
+      const artistPromises = [];
+      snapshot.forEach(childSnapshot => {
+        const artistRef = ref(db, `artist/${childSnapshot.key}`);
+        const artistPromise = get(artistRef).then(artistSnapshot => {
+
+          const artistData = artistSnapshot.val();
+          const artistName = artistData.name;
+          const artistPhotoRef = firebase.storage().ref(`audio/artiste/${childSnapshot.key}/photo`);
+          return artistPhotoRef.list().then(res => {
+            if (res.items.length === 0) {
+              console.log(`No photo found for artist ${artistName}`);
+              return { name:  childSnapshot.key, photo: null };
+            }
+            return res.items[0].getDownloadURL().then(url => {
+              return { name:  childSnapshot.key, photo: url };
+            });
+          }).catch(error => {
+            console.log(`Error getting download URL for artist ${ childSnapshot.key}: `, error);
+            return { name:  childSnapshot.key, photo: null };
+          });
+        });
+        artistPromises.push(artistPromise);
+      });
+      Promise.all(artistPromises).then(artists => {
+        setAllArtists(artists.filter(artist => artist.photo !== null));
+      });
+    }).catch(error => {
+      console.log('Error getting artists:', error);
+    });
+  }, []);
+ 
   
 
 
@@ -115,24 +154,21 @@ const HomeScreen = () => {
         <Title>{t('resources.home.artists')}</Title>
       </SectionTitle>
       <ArtistContainer>
-        <ArtistList horizontal>
-          {artists.map(artist => (
-            <StyledTouchableOpacity
-              key={artist}
-              onPress={() => handleArtistPress(artist)}>
-              <PlaylistItem key={artist}>
-                <CoverImage
-                  source={{
-                    uri: 'https://th.bing.com/th/id/R.d18d3a164ae5c25af0e37c47fb9691a5?rik=llRrX6QhdCIfPA&pid=ImgRaw&r=0',
-                  }}
-                />
-
-                <PlaylistName>{artist}</PlaylistName>
-              </PlaylistItem>
-            </StyledTouchableOpacity>
-          ))}
-        </ArtistList>
-      </ArtistContainer>
+  <ArtistList horizontal>
+    {allArtists.map(artist => (
+      <StyledTouchableOpacity
+        key={artist.name}
+        onPress={() => handleArtistPress(artist.name)}>
+        <PlaylistItem key={artist.name}>
+          <CoverImage
+            source={{ uri: artist.photo }}
+          />
+          <PlaylistName>{artist.name}</PlaylistName>
+        </PlaylistItem>
+      </StyledTouchableOpacity>
+    ))}
+  </ArtistList>
+</ArtistContainer>
 
       <SectionTitle>
         <Title>{t('resources.home.albums')}</Title>

@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   TouchableOpacity,
   Text,
-  Button,
   View,
   PermissionsAndroid,
 } from 'react-native';
@@ -21,6 +20,7 @@ import {requestMultiple} from 'react-native-permissions';
 import {getDatabase} from 'firebase/database';
 import {ref, set, get, query, orderByChild, equalTo} from 'firebase/database';
 import {useNavigation} from '@react-navigation/native';
+import Button from '../../components/button';
 
 import {SelectList} from 'react-native-dropdown-select-list';
 import CheckBox from '@react-native-community/checkbox';
@@ -353,7 +353,10 @@ const addMusique = () => {
   };
 
   return (
-    <View>
+    <Container>
+    <Title>Ajouter un élément</Title>
+
+    <AddSection>
       {!isSelected ? (
         <SelectList
           setSelected={val => setSelected(val)}
@@ -379,9 +382,9 @@ const addMusique = () => {
           onChangeText={text => setArtiste(text)}
         />
         <StyledTouchableOpacity onPress={handlePhotoArtistSelect}>
-          <StyledText>
+          <Text>
             {photoArtistFile ? photoArtistFile[0].name : `Sélectionner une photo pour l'artist`}
-          </StyledText>
+          </Text>
         </StyledTouchableOpacity>
 
         </>
@@ -412,15 +415,15 @@ const addMusique = () => {
 
       {isSelected2 ? (
         <StyledTouchableOpacity onPress={handlePhotoAlbumSelect}>
-          <StyledText>
+          <Text>
             {photoAlbumFile ? photoAlbumFile[0].name : `Sélectionner une photo pour l'album`}
-          </StyledText>
+          </Text>
         </StyledTouchableOpacity>
       ) : null}
       <StyledTouchableOpacity onPress={handleAudioSelect}>
-        <StyledText>
+        <Text>
           {audioFile ? audioFile[0].name : 'Sélectionner un fichier audio'}
-        </StyledText>
+        </Text>
       </StyledTouchableOpacity>
 
       <Button title="Télécharger" onPress={handleUpload} />
@@ -428,7 +431,8 @@ const addMusique = () => {
         title="Supprimer une musique"
         onPress={() => navigation.navigate('DeleteMusique')}
       />
-    </View>
+      </AddSection>
+  </Container>
   );
 };
 
@@ -440,6 +444,17 @@ const StyledTouchableOpacity = styled(TouchableOpacity)`
   border-radius: 5px;
 `;
 
-const StyledText = styled(Text)`
-  color: #fff;
+const Container = styled.View`
+  flex: 1;
+  padding: 20px;
+`;
+
+
+const Title = styled.Text`
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+`;
+const AddSection = styled.View`
+  margin-top: 20px;
 `;

@@ -4,6 +4,7 @@ export const theme = {
     light: '#FFECB3',
     dark: '#1D1D1D',
     background: '#ffffff',
+    
   },
   text: {
     main: '#FFFFFF',
@@ -11,6 +12,7 @@ export const theme = {
     lightGrey: '#BDBDBD',
     dark: '#1D1D1D',
     background: '#F5F5F5',
+    white:'#FFFFFF',
   },
   spacing: {
     small: '5px',

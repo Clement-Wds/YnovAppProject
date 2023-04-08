@@ -10,6 +10,7 @@ import {firebase} from '@react-native-firebase/auth';
 import Button from '../../components/button';
 import {useTranslation} from 'react-i18next';
 import CheckBox from '@react-native-community/checkbox';
+import {ref, getDatabase,get} from 'firebase/database';
 
 import { useSelector, useDispatch } from 'react-redux';
 import {profileDetailsRequest} from "../../actions/profile";
@@ -29,6 +30,7 @@ const LoginScreen = () => {
   });
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getDatabase(app);
 
   const dispatch = useDispatch();
 
@@ -83,35 +85,37 @@ const LoginScreen = () => {
     
 
     GoogleSignin.signIn()
-      .then(({idToken: token, accessToken}) => {
-        // Stocker le token dans la variable
-        idToken = token; // Affecter la valeur du token à la variable idToken
-        const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken);
-        return firebase.auth().signInWithCredential(googleCredential);
-      })
-      .then(({user}) => {
-        console.log(user);
-
-        const {uid, displayName, email, photoURL} = user;
-
-        dispatch(profileDetailsRequest(user));
-
-        firebase.firestore().collection('users').doc(uid).set(
-          {
-            displayName,
-            email,
-            photoURL,
-          },
-          {merge: true},
-        );
-
-        return console.log(idToken); //AsyncStorage.setItem('token', idToken); // Stocker idToken dans AsyncStorage
-      })
-      .then(() => {
-        //navigation.navigate('Home')
-
-        Alert.alert('Success', 'You have successfully signed in!');
-      })
+    .then(({idToken: token, accessToken}) => {
+      // Stocker le token dans la variable
+      idToken = token; // Affecter la valeur du token à la variable idToken
+      const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken);
+      return firebase.auth().signInWithCredential(googleCredential);
+    })
+    .then(({user}) => {
+      console.log(user);
+  
+      const {uid, displayName, email, photoURL} = user;
+  
+      dispatch(profileDetailsRequest(user));
+  
+      // Récupérer les informations de l'utilisateur à partir de la base de données en temps réel de Firebase
+      const db = getDatabase();
+      return get(ref(db, `users/${uid}`));
+    })
+    .then((snapshot) => {
+      const user = snapshot.val();
+      console.log(user);
+  
+      // Dispatch l'action pour mettre à jour les détails de profil de l'utilisateur
+      dispatch(profileDetailsRequest(user));
+  
+      return console.log(idToken); //AsyncStorage.setItem('token', idToken); // Stocker idToken dans AsyncStorage
+    })
+    .then(() => {
+      //navigation.navigate('Home')
+  
+      Alert.alert('Success', 'You have successfully signed in!');
+    })
       .catch(error => {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
           Alert.alert('Cancelled', 'Sign-in was cancelled!');

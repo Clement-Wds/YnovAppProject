@@ -53,6 +53,9 @@ const ProfileScreen = () => {
         <ProfileText>
           Pays : {profileState?.pays}
         </ProfileText>
+        <ProfileText>
+          IsAdmin : {profileState?.isAdmin}
+        </ProfileText>
       </ProfileInfo>
       {/* <PlaylistSection>
         <SectionTitle>PLAYLISTS</SectionTitle>

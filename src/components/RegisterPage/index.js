@@ -106,7 +106,7 @@ const RegisterPage = () => {
             email: user.email,
             displayName: user.displayName,
             photoURL: user.photoURL,
-            pays: codePays
+            pays: user.codePays
             //others
           };
 

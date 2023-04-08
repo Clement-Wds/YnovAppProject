@@ -6,6 +6,7 @@ const initialState = {
         email: null,
         pays: null,
         photoURL: null,
+        isAdmin:null,
     },
 }
 

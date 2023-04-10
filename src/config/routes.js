@@ -19,6 +19,8 @@ import ForgotPassword from '../screens/forgotPassword';
 import AlbumScreen from '../screens/album';
 import AlbumScreenCard from '../screens/albumSong';
 import Logout from '../screens/logout';
+import TrackList from '../screens/TrackListScreen';
+
 
 import {useSelector, useDispatch} from 'react-redux';
 import {profileDetailsRequest} from '../../src/actions/profile';
@@ -48,6 +50,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name="AlbumCard" component={AlbumScreenCard} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="Logout" component={Logout} />
+      <Stack.Screen name="TrasckList" component={TrackList} />
     </Stack.Navigator>
   );
 };
@@ -91,7 +94,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name={t('resources.search.title')}
-        component={Search}
+        component={TrackList}
         options={{
           tabBarIcon: () => <Logo source={require('../assets/search.png')} />,
         }}

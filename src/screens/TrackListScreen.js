@@ -62,9 +62,7 @@ export default function TrackListScreen() {
           source={{uri: 'https://www.bensound.com/bensound-img/punky.jpg'}}
         />
       </LinearGradient>
-      <TouchableOpacity style={styles.shuffleButtonContainer}>
-        <Text style={[styles.shuffleButton]}>SHUFFLE PLAY</Text>
-      </TouchableOpacity>
+      
     </>
   );
   const onSelectTrack = async (selectedTrack, index) => {
@@ -146,7 +144,7 @@ const playOrPause = async isCurrentTrack => {
     <View style={styles.container}>
       <SafeAreaView />
       {selectedMusic && (
-        <          TrackPlayerScreen
+        <TrackPlayerScreen
           onCloseModal={() => setisPlayerModalVisible(false)}
           isVisible={isPlayerModalVisible}
           isPlaying={isPlaying}
@@ -156,26 +154,31 @@ const playOrPause = async isCurrentTrack => {
           timestamp={Math.round(position)}
           onPressNext={onPressNext}
           onPressPrev={onPressPrev}
-          playbackMode={mode}          onClickLoop={()=> mood === "loop" ? setMode("loop") : setMode("off")}
+          playbackMode={mode}          
+          onClickLoop={()=> mode === "loop" ? setMode("loop") : setMode("off")}
         />
       )}
       <View style={[styles.widgetContainer, {justifyContent: 'center'}]}>
-        <Text style={styles.musicTitle}>My music</Text>
+        <Text style={styles.musicTitle}>Mettre le nom de la playlist</Text>
       </View>
+
       <FlatList
         data={musiclibrary}
         keyExtractor={item => item.url}
         renderItem={renderSingleMusic}
       />
+
       {selectedMusic && (
         <Pressable onPress={() => setisPlayerModalVisible(true)}>
           <View style={[styles.widgetContainer, {}]}>
             <View style={{flexDirection: 'row'}}>
+
               <Image
                 resizeMode="cover"
                 source={{uri: selectedMusic.artwork}}
                 style={styles.widgetImageStyle}
               />
+
               <View>
                 <Text style={styles.widgetMusicTitle}>
                   {selectedMusic.title}
@@ -184,6 +187,7 @@ const playOrPause = async isCurrentTrack => {
                   {selectedMusic.artist}
                 </Text>
               </View>
+              
             </View>
             <Pressable onPress={() => playOrPause()}>
               <Image
@@ -252,17 +256,5 @@ const styles = StyleSheet.create({
     height: 250,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  shuffleButton: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  shuffleButtonContainer: {
-    paddingVertical: 15,
-    paddingHorizontal: 35,
-    borderRadius: 40,
-    alignSelf: 'center',
-    backgroundColor: '#1DB954',
   },
 });

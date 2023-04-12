@@ -62,7 +62,6 @@ export default function TrackPlayerScreen({
             <Text style={styles.boldMainText}>{selectedMusic.title}</Text>
             <Text style={styles.mainText}>{selectedMusic.artist}</Text>
           </View>
-          <Text>Like</Text>
         </View>
         <Slider
           tapToSeek={true}

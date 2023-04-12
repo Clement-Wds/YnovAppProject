@@ -146,14 +146,14 @@ const LoginScreen = () => {
           secureTextEntry={isSelected ? false : true}
           onChangeText={text => setInputs({...inputs, password: text})}
         />
-      <Text>Show PassWord?</Text>
+      <Text>{t('resources.login.showPassword')}</Text>
       <CheckBox
         disabled={false}
         value={isSelected}
         onValueChange={newValue => setSelection(newValue)}
       />
         <Button title={t('resources.login.title')} onPress={handleLogin} />
-        <Button title="Se connecter avec Google" onPress={loginUserWithGoogle} />
+        <Button title={t('resources.login.google')} onPress={loginUserWithGoogle} />
         {/* <GoogleSigninButton
           size={GoogleSigninButton.Size.Wide}
           color={GoogleSigninButton.Color.Light}
@@ -165,7 +165,7 @@ const LoginScreen = () => {
         </RegisterLink>
 
         <RegisterLink onPress={() => navigation.navigate('ForgotPassword')}>
-          <RegisterText>Forgot Password ?</RegisterText>
+          <RegisterText>{t('resources.login.forgotPassword')}</RegisterText>
         </RegisterLink>
       </ContainerView>
     </Container>

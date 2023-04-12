@@ -109,7 +109,7 @@ const BottomTabNavigator = () => {
       />
       {profileState?.isAdmin ? (
         <Tab.Screen
-          name={t('resources.addMusique.title')}
+          name={t('resources.addMusic.title')}
           component={AddMusique}
           options={{
             tabBarIcon: () => (

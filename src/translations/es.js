@@ -8,6 +8,13 @@ export default {
         albums: 'Álbumes',
         recentlyPlayed: 'Jugado recientemente',
         trackName: 'Pista: {{name}}',
+        artists:'Artista',
+      },
+      library: {
+        title: 'Biblioteca',
+      },
+      albumscreen: {
+        headertext: 'Álbumes recientes',
       },
       header: {
         title: 'Hola',
@@ -37,11 +44,59 @@ export default {
       },
       register: {
         title: 'Registro',
+        email:'Correo electrónico',
         description: 'Esta es la página de registro',
+        password:'contraseña',
+        passwordConfirm: 'confirmar la contraseña',
+        alreadyHaveAccount: 'Ya tienes una cuenta ? ¡Entre aquí!',
+        google: "Regístrese con Google",
+        showPassword:'Ver contraseña ?',
+        showPasswordConfirmation:'Ver confirmación de contraseña ?'
       },
-      addMusique: {
+      addMusic: {
         title: 'Agregar música',
         description: 'Esta es la página de agregar música',
+        addElement:'Añadir artículo',
+        selectArtist:'Selecciona un artista',
+        selectArtistPhoto:"Seleccione una foto para el artista",
+        selectAlbumPhoto:"Seleccione una foto para el álbum",
+        artistDoesntExist:"¿El artista no existe en la lista?",
+        albumDoesntExist:"¿El álbum no existe en la lista?",
+        selectAlbum:'Seleccione un álbum',
+        selectAudio:'Seleccione un archivo de audio',
+        download:'Descargar',
+        delete:'Eliminar música',
+        artist:'Artista',
+        album:'Álbum'
+
+      },
+      deleteMusic:{
+        deleteElement:"Eliminar un elemento",
+        deleteAlbum:"Eliminar un álbum",
+        deleteMusic:"Eliminar música",
+        selectArtist:'Selecciona un artista',
+        selectAlbum:'Seleccione un álbum',
+        selectMusic:'Seleccionar música',
+        delete:'Eliminar',
+
+      },
+      login: {
+        title: "Acceso",
+        description: 'Esta es la página de inicio de sesión',
+        email: 'Correo electrónico',
+        password:'contraseña',
+        alreadyHaveAccount: "¿No tienes una cuenta? Registrar aquí !",
+        google: "Iniciar sesión con Google",
+        showPassword:'Ver contraseña ?',
+        forgotPassword:'Contraseña olvidada ?',
+
+      },
+      profil:{
+        hello:'Buenos dias',
+        displayName:"Nombre del usuario : ",
+        email:"Correo electrónico :",
+        state:"País : ",
+      
       },
     },
   },

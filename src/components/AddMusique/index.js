@@ -21,6 +21,7 @@ import {getDatabase} from 'firebase/database';
 import {ref, set, get, query, orderByChild, equalTo} from 'firebase/database';
 import {useNavigation} from '@react-navigation/native';
 import Button from '../../components/button';
+import {useTranslation} from 'react-i18next';
 
 import {SelectList} from 'react-native-dropdown-select-list';
 import CheckBox from '@react-native-community/checkbox';
@@ -44,6 +45,7 @@ const addMusique = () => {
   useEffect(() => {
     requestPermissions();
   }, []);
+  const {t} = useTranslation();
 
   const [audioFile, setAudioFile] = useState(null);
   const [photoAlbumFile, setPhotoAlbumFile] = useState(null);
@@ -354,7 +356,7 @@ const addMusique = () => {
 
   return (
     <Container>
-    <Title>Ajouter un élément</Title>
+    <Title>{t('resources.addMusic.addElement')}</Title>
 
     <AddSection>
       {!isSelected ? (
@@ -362,12 +364,12 @@ const addMusique = () => {
           setSelected={val => setSelected(val)}
           data={artists}
           save="value"
-          placeholder="Selectionez un artiste"
+          placeholder={t('resources.addMusic.selectArtist')}
           onSelect={handleArtistChange}
         />
       ) : null}
 
-      <Text>L'artiste n'existe pas dans la liste?</Text>
+      <Text>{t('resources.addMusic.artistDoesntExist')}</Text>
       <CheckBox
         disabled={false}
         value={isSelected}
@@ -377,13 +379,13 @@ const addMusique = () => {
       {isSelected ? (
         <>
         <TextInput
-          placeholder="Artiste"
+          placeholder={t('resources.addMusic.artist')}
           value={artiste}
           onChangeText={text => setArtiste(text)}
         />
         <StyledTouchableOpacity onPress={handlePhotoArtistSelect}>
           <Text>
-            {photoArtistFile ? photoArtistFile[0].name : `Sélectionner une photo pour l'artist`}
+            {photoArtistFile ? photoArtistFile[0].name : t('resources.addMusic.selectArtistPhoto')}
           </Text>
         </StyledTouchableOpacity>
 
@@ -396,10 +398,10 @@ const addMusique = () => {
           setSelected={val => setSelected2(val)}
           data={albums}
           save="value"
-          placeholder="Selectionez un album"
+          placeholder={t('resources.addMusic.selectAlbum')}
         />
       ) : null}
-      <Text>L'album n'existe pas dans la liste?</Text>
+      <Text>{t('resources.addMusic.albumDoesntExist')}</Text>
       <CheckBox
         disabled={false}
         value={isSelected2}
@@ -407,7 +409,7 @@ const addMusique = () => {
       />
       {isSelected2 ? (
         <TextInput
-          placeholder="Album"
+          placeholder={t('resources.addMusic.album')}
           value={album}
           onChangeText={text => setAlbum(text)}
         />
@@ -416,19 +418,19 @@ const addMusique = () => {
       {isSelected2 ? (
         <StyledTouchableOpacity onPress={handlePhotoAlbumSelect}>
           <Text>
-            {photoAlbumFile ? photoAlbumFile[0].name : `Sélectionner une photo pour l'album`}
+            {photoAlbumFile ? photoAlbumFile[0].name : t('resources.addMusic.selectAlbumPhoto')}
           </Text>
         </StyledTouchableOpacity>
       ) : null}
       <StyledTouchableOpacity onPress={handleAudioSelect}>
         <Text>
-          {audioFile ? audioFile[0].name : 'Sélectionner un fichier audio'}
+          {audioFile ? audioFile[0].name : t('resources.addMusic.selectAudio')}
         </Text>
       </StyledTouchableOpacity>
 
-      <Button title="Télécharger" onPress={handleUpload} />
+      <Button title={t('resources.addMusic.download')}onPress={handleUpload} />
       <Button
-        title="Supprimer une musique"
+        title={t('resources.addMusic.delete')}
         onPress={() => navigation.navigate('DeleteMusique')}
       />
       </AddSection>

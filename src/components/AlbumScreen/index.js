@@ -7,6 +7,7 @@ import {firebase} from '@react-native-firebase/auth';
 import styled from 'styled-components/native';
 import config from '../../../firebase';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 // Initialize Firebase app
 if (!firebase.apps.length) {
@@ -20,6 +21,7 @@ const AlbumScreen = () => {
   const route = useRoute();
   const {artist} = route.params;
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   useEffect(() => {
     const albumRef = ref(db, `artist/${artist}`);
@@ -44,7 +46,7 @@ const AlbumScreen = () => {
       <ArtistName>{artist}</ArtistName>
 
       <Header>
-        <HeaderText>Albums récents</HeaderText>
+        <HeaderText>{t('resources.albumscreen.headertext')}</HeaderText>
       </Header>
 
       <AlbumList

@@ -8,6 +8,7 @@ import {firebase} from '@react-native-firebase/auth';
 import config from '../../../firebase';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
@@ -16,6 +17,8 @@ const app = initializeApp(config);
 const db = getDatabase(app);
 
 const LibraryScreen = () => {
+  const {t} = useTranslation();
+
   const [artists, setArtists] = useState([]);
   const navigation = useNavigation();
 
@@ -40,7 +43,7 @@ const LibraryScreen = () => {
   };
   return (
     <Container>
-      <Title>Your Library</Title>
+      <Title>{t('resources.library.title')}</Title>
       {artists.map(artist => (
         <StyledTouchableOpacity
           key={artist}

@@ -10,6 +10,12 @@ export default {
         recentlyPlayed: 'Recently Played',
         trackName: 'Track: {{name}}',
       },
+      library: {
+        title: 'Library',
+      },
+      albumscreen: {
+        headertext: 'Recent albums',
+      },
       header: {
         title: 'Hello',
         description: 'This is the header page',
@@ -42,6 +48,10 @@ export default {
         passwordConfirm: 'Confirm Password',
         description: 'This is the register page',
         alreadyHaveAccount: 'Already have an account ? Login Here!',
+        showPassword:'Show password ?',
+        showPasswordConfirmation:'Show password confirmation ?',
+        google: 'Register with google',
+
       },
       login: {
         title: 'Login',
@@ -49,11 +59,45 @@ export default {
         password: 'Password',
         description: 'This is the register page',
         alreadyHaveAccount: "You don't have an account ? Register Here!",
+        showPassword:'Show password ?',
+        forgotPassword:'Forgot Password ?',
+        google:'Login with google',
+
+
       },
 
-      addMusique: {
+      addMusic: {
         title: 'Add Music',
         description: 'This is the add music page',
+        addElement:'Add item',
+        selectArtist:'Select an artist',
+        selectArtistPhoto:"Select a photo for the artist",
+        selectAlbumPhoto:"Select a photo for the album",
+        artistDoesntExist:"The artist does not exist in the list?",
+        albumDoesntExist:"The album does not exist in the list?",
+        selectAlbum:'Select an album',
+        selectAudio:'Select an audio file',
+        download:'Download',
+        delete:'Delete music',
+        artist:'Artist',
+        album:'Album'
+      },
+      deleteMusic:{
+        deleteElement:"Delete an item",
+        deleteAlbum:"Delete an album",
+        deleteMusic:"Delete music",
+        selectArtist:'Select an artist',
+        selectAlbum:'Select an album',
+        selectMusic:'Select music',
+        delete:"Delete"
+
+      },
+      profil:{
+        hello:'Hello',
+        displayName:"Display name : ",
+        email:"Email : ",
+        state:"State : ",
+      
       },
     },
   },

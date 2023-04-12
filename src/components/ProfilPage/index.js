@@ -9,10 +9,12 @@ import {getAuth, onAuthStateChanged, signOut} from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { compose } from 'redux';
 import CheckBox from '@react-native-community/checkbox';
+import {useTranslation} from 'react-i18next';
 
 const ProfileScreen = () => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
+  const {t} = useTranslation();
 
   const dispatch = useDispatch();
   const profileState = useSelector(state => state.profile.user);
@@ -42,16 +44,16 @@ const ProfileScreen = () => {
     <Container>
       <ProfileInfo>
         <ProfileImage src={profileState?.photoURL} />
-        <ProfileName>Bonjour {profileState?.displayName}</ProfileName>
+        <ProfileName>{t('resources.profil.hello')} {profileState?.displayName}</ProfileName>
         {/* <ProfileFollowers>1,000 followers</ProfileFollowers> */}
         <ProfileText>
-          Nom d'utilisateur : {profileState?.displayName}
+        {t('resources.profil.displayName')} {profileState?.displayName}
         </ProfileText>
         <ProfileText>
-          Email : {profileState?.email}
+        {t('resources.profil.email')} {profileState?.email}
         </ProfileText>
         <ProfileText>
-          Pays : {profileState?.pays}
+        {t('resources.profil.state')} {profileState?.pays}
         </ProfileText>
         <ProfileText>
           IsAdmin : 

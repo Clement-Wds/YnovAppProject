@@ -5,6 +5,7 @@ import {initializeApp} from 'firebase/app';
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
 import {firebase} from '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
+
 import {
   GoogleSignin,
   statusCodes,
@@ -27,6 +28,7 @@ import CheckBox from '@react-native-community/checkbox';
 import {requestMultiple} from 'react-native-permissions';
 
 const RegisterPage = () => {
+
   const requestPermissions = async () => {
     const result = await requestMultiple([
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -206,7 +208,7 @@ const RegisterPage = () => {
         secureTextEntry={isSelected ? false : true}
         onChangeText={text => setInputs({...inputs, password: text})}
       />
-      <Text>Show PassWord?</Text>
+      <Text>{t('resources.register.showPassword')}</Text>
       <CheckBox
         disabled={false}
         value={isSelected}
@@ -221,18 +223,15 @@ const RegisterPage = () => {
           setInputs({...inputs, password_confirmation: text})
         }
       />
-      <Text>Show PassWord Confirmation?</Text>
+      <Text>{t('resources.register.showPasswordConfirmation')}</Text>
       <CheckBox
         disabled={false}
         value={isSelected2}
         onValueChange={newValue => setSelection2(newValue)}
       />
       <Button title={t('resources.register.title')} onPress={HandleRegister} />
-      <GoogleSigninButton
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Light}
-        onPress={createUserWithGoogle}
-      />
+     
+      <Button title={t('resources.register.google')} onPress={createUserWithGoogle} />
       <RegisterLink onPress={() => navigation.navigate('Login')}>
         <RegisterText>
           {t('resources.register.alreadyHaveAccount')}

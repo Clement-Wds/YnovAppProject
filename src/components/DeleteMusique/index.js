@@ -18,6 +18,7 @@ import {requestMultiple} from 'react-native-permissions';
 import {getDatabase} from 'firebase/database';
 import {ref, set, get, query, orderByChild, equalTo} from 'firebase/database';
 import Button from '../../components/button';
+import {useTranslation} from 'react-i18next';
 
 import firestore from '@react-native-firebase/firestore';
 
@@ -36,6 +37,7 @@ const DeleteMusique = () => {
   const [selected, setSelected] = useState('');
   const [selected2, setSelected2] = useState('');
   const [selected3, setSelected3] = useState('');
+  const {t} = useTranslation();
 
   const [artists, setArtists] = useState([]);
   const [selectedArtist, setSelectedArtist] = useState('');
@@ -253,16 +255,16 @@ const DeleteMusique = () => {
   };
   return (
     <Container>
-    <Title>Supprimer un élément</Title>
+    <Title>{t('resources.deleteMusic.deleteElement')}</Title>
 
     <DeleteSection>
-      <Text>Supprimer un album</Text>
+      <Text>{t('resources.deleteMusic.deleteAlbum')}</Text>
       <CheckBox
         disabled={false}
         value={isSelected}
         onValueChange={(newValue) => setSelection(newValue)}
       />
-      <Text>Supprimer une musique</Text>
+      <Text>{t('resources.deleteMusic.deleteMusic')}e</Text>
       <CheckBox
         disabled={false}
         value={isSelected2}
@@ -273,7 +275,7 @@ const DeleteMusique = () => {
         setSelected={val => setSelected(val)}
         data={artists}
         save="value"
-        placeholder="Selectionez un artiste"
+        placeholder={t('resources.deleteMusic.selectArtist')}
         onSelect={handleArtistChange}
       />
 
@@ -282,7 +284,7 @@ const DeleteMusique = () => {
           setSelected={val => setSelected2(val)}
           data={albums}
           save="value"
-          placeholder="Selectionez un album"
+          placeholder={t('resources.deleteMusic.selectAlbum')}
           onSelect={handleAlbumChange}
         />
       ) : null}
@@ -292,12 +294,12 @@ const DeleteMusique = () => {
         setSelected={val => setSelected3(val)}
         data={musiques}
           save="value"
-          placeholder="Selectionez une musique"
+          placeholder={t('resources.deleteMusic.selectMusic')}
           
         />
       ) : null}
 
-      <Button title="Supprimer" onPress={handleDelete} />
+      <Button title={t('resources.deleteMusic.delete')} onPress={handleDelete} />
     </DeleteSection>
   </Container>
 

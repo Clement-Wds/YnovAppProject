@@ -9,6 +9,13 @@ import {firebase} from '@react-native-firebase/auth';
 import config from '../../../firebase';
 import {useNavigation} from '@react-navigation/native';
 
+//ad mob
+import {
+  GAMBannerAd,
+  BannerAdSize,
+  TestIds,
+} from 'react-native-google-mobile-ads';
+
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
@@ -40,9 +47,7 @@ const HomeScreen = () => {
       });
   }, []);
 
-
   //Fonction Faouizi
-
 
   // useEffect(() => {
   //   const albumsRef = ref(db, 'artist');
@@ -67,81 +72,96 @@ const HomeScreen = () => {
 
   useEffect(() => {
     const albumsRef = ref(db, 'artist');
-  
-    get(albumsRef).then(snapshot => {
-      const albumPromises = [];
-      snapshot.forEach(childSnapshot => {
-        const artistAlbums = childSnapshot.val();
-        Object.keys(artistAlbums).forEach(albumKey => {
-          const albumRef = ref(db, `artist/${childSnapshot.key}/${albumKey}`);
-          const albumPromise = get(albumRef).then(albumSnapshot => {
 
-            const albumData = albumSnapshot.val();
-            const albumName = albumData.name || albumKey;
-            const albumPhotoRef = firebase.storage().ref(`audio/artiste/${childSnapshot.key}/${albumName}/photo`);
-            
-            return albumPhotoRef.list().then(res => {
-              if (res.items.length === 0) {
-                console.log(`No photo found for album ${albumName}`);
-                return { name: albumName, photo: null };
-              }
-              return res.items[0].getDownloadURL().then(url => {
-                return { name: albumName, photo: url };
-              });
-            }).catch(error => {
-              console.log(`Error getting download URL for album ${albumName}: `, error);
-              return { name: albumName, photo: null };
+    get(albumsRef)
+      .then(snapshot => {
+        const albumPromises = [];
+        snapshot.forEach(childSnapshot => {
+          const artistAlbums = childSnapshot.val();
+          Object.keys(artistAlbums).forEach(albumKey => {
+            const albumRef = ref(db, `artist/${childSnapshot.key}/${albumKey}`);
+            const albumPromise = get(albumRef).then(albumSnapshot => {
+              const albumData = albumSnapshot.val();
+              const albumName = albumData.name || albumKey;
+              const albumPhotoRef = firebase
+                .storage()
+                .ref(`audio/artiste/${childSnapshot.key}/${albumName}/photo`);
+
+              return albumPhotoRef
+                .list()
+                .then(res => {
+                  if (res.items.length === 0) {
+                    console.log(`No photo found for album ${albumName}`);
+                    return {name: albumName, photo: null};
+                  }
+                  return res.items[0].getDownloadURL().then(url => {
+                    return {name: albumName, photo: url};
+                  });
+                })
+                .catch(error => {
+                  console.log(
+                    `Error getting download URL for album ${albumName}: `,
+                    error,
+                  );
+                  return {name: albumName, photo: null};
+                });
             });
+            albumPromises.push(albumPromise);
           });
-          albumPromises.push(albumPromise);
         });
+        Promise.all(albumPromises).then(albums => {
+          setAllAlbums(albums.filter(album => album.photo !== null));
+        });
+      })
+      .catch(error => {
+        console.log('Error getting albums:', error);
       });
-      Promise.all(albumPromises).then(albums => {
-        setAllAlbums(albums.filter(album => album.photo !== null));
-      });
-    }).catch(error => {
-      console.log('Error getting albums:', error);
-    });
   }, []);
-  console.log(allAlbums)
+  console.log(allAlbums);
 
   useEffect(() => {
     const artistsRef = ref(db, 'artist');
-    
-    get(artistsRef).then(snapshot => {
-      const artistPromises = [];
-      snapshot.forEach(childSnapshot => {
-        const artistRef = ref(db, `artist/${childSnapshot.key}`);
-        const artistPromise = get(artistRef).then(artistSnapshot => {
 
-          const artistData = artistSnapshot.val();
-          const artistName = artistData.name;
-          const artistPhotoRef = firebase.storage().ref(`audio/artiste/${childSnapshot.key}/photo`);
-          return artistPhotoRef.list().then(res => {
-            if (res.items.length === 0) {
-              console.log(`No photo found for artist ${artistName}`);
-              return { name:  childSnapshot.key, photo: null };
-            }
-            return res.items[0].getDownloadURL().then(url => {
-              return { name:  childSnapshot.key, photo: url };
-            });
-          }).catch(error => {
-            console.log(`Error getting download URL for artist ${ childSnapshot.key}: `, error);
-            return { name:  childSnapshot.key, photo: null };
+    get(artistsRef)
+      .then(snapshot => {
+        const artistPromises = [];
+        snapshot.forEach(childSnapshot => {
+          const artistRef = ref(db, `artist/${childSnapshot.key}`);
+          const artistPromise = get(artistRef).then(artistSnapshot => {
+            const artistData = artistSnapshot.val();
+            const artistName = artistData.name;
+            const artistPhotoRef = firebase
+              .storage()
+              .ref(`audio/artiste/${childSnapshot.key}/photo`);
+            return artistPhotoRef
+              .list()
+              .then(res => {
+                if (res.items.length === 0) {
+                  console.log(`No photo found for artist ${artistName}`);
+                  return {name: childSnapshot.key, photo: null};
+                }
+                return res.items[0].getDownloadURL().then(url => {
+                  return {name: childSnapshot.key, photo: url};
+                });
+              })
+              .catch(error => {
+                console.log(
+                  `Error getting download URL for artist ${childSnapshot.key}: `,
+                  error,
+                );
+                return {name: childSnapshot.key, photo: null};
+              });
           });
+          artistPromises.push(artistPromise);
         });
-        artistPromises.push(artistPromise);
+        Promise.all(artistPromises).then(artists => {
+          setAllArtists(artists.filter(artist => artist.photo !== null));
+        });
+      })
+      .catch(error => {
+        console.log('Error getting artists:', error);
       });
-      Promise.all(artistPromises).then(artists => {
-        setAllArtists(artists.filter(artist => artist.photo !== null));
-      });
-    }).catch(error => {
-      console.log('Error getting artists:', error);
-    });
   }, []);
- 
-  
-
 
   const handleArtistPress = artist => {
     navigation.navigate('Album', {artist});
@@ -154,39 +174,43 @@ const HomeScreen = () => {
         <Title>{t('resources.home.artists')}</Title>
       </SectionTitle>
       <ArtistContainer>
-  <ArtistList horizontal>
-    {allArtists.map(artist => (
-      <StyledTouchableOpacity
-        key={artist.name}
-        onPress={() => handleArtistPress(artist.name)}>
-        <PlaylistItem key={artist.name}>
-          <CoverImage
-            source={{ uri: artist.photo }}
-          />
-          <PlaylistName>{artist.name}</PlaylistName>
-        </PlaylistItem>
-      </StyledTouchableOpacity>
-    ))}
-  </ArtistList>
-</ArtistContainer>
+        <ArtistList horizontal>
+          {allArtists.map(artist => (
+            <StyledTouchableOpacity
+              key={artist.name}
+              onPress={() => handleArtistPress(artist.name)}>
+              <PlaylistItem key={artist.name}>
+                <CoverImage source={{uri: artist.photo}} />
+                <PlaylistName>{artist.name}</PlaylistName>
+              </PlaylistItem>
+            </StyledTouchableOpacity>
+          ))}
+        </ArtistList>
+      </ArtistContainer>
 
       <SectionTitle>
         <Title>{t('resources.home.albums')}</Title>
       </SectionTitle>
       <ArtistList horizontal>
-  {allAlbums.map(album => (
-    <StyledTouchableOpacity
-      key={album.name}
-      onPress={() => console.log('Album selected:', album)}>
-      <AlbumItem key={album.name}>
-        <CoverImage
-          source={{ uri: album.photo }}
-        />
-        <SongTitle>{album.name}</SongTitle>
-      </AlbumItem>
-    </StyledTouchableOpacity>
-  ))}
-</ArtistList>
+        {allAlbums.map(album => (
+          <StyledTouchableOpacity
+            key={album.name}
+            onPress={() => console.log('Album selected:', album)}>
+            <AlbumItem key={album.name}>
+              <CoverImage source={{uri: album.photo}} />
+              <SongTitle>{album.name}</SongTitle>
+            </AlbumItem>
+          </StyledTouchableOpacity>
+        ))}
+      </ArtistList>
+
+      <GAMBannerAd
+        unitId={TestIds.BANNER}
+        sizes={[BannerAdSize.FULL_BANNER]}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+      />
     </ContainerScrollView>
   );
 };

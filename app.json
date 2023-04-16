@@ -1,4 +1,9 @@
 {
   "name": "YnovAppProject",
-  "displayName": "YnovAppProject"
+  "displayName": "YnovAppProject",
+
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-7356605766173431~5187455256",
+    "ios_app_id": "ca-app-pub-7356605766173431~2956877737"
+  }
 }

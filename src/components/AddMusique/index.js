@@ -5,6 +5,11 @@ import {
   View,
   PermissionsAndroid,
 } from 'react-native';
+
+//CA C'EST DE L'IMPORT CLASSIQUE POUR REDUX
+import { useSelector, useDispatch } from 'react-redux';
+import {artist, getAllArtists} from "../../actions/artist";
+
 import {initializeApp} from 'firebase/app';
 import config from '../../../firebase';
 import {useEffect} from 'react';
@@ -45,6 +50,7 @@ const addMusique = () => {
   useEffect(() => {
     requestPermissions();
   }, []);
+  
   const {t} = useTranslation();
 
   const [audioFile, setAudioFile] = useState(null);
@@ -60,29 +66,45 @@ const addMusique = () => {
   const [isSelected, setSelection] = useState(false);
   const [isSelected2, setSelection2] = useState(false);
 
-  const [artists, setArtists] = useState([]);
   const [selectedArtist, setSelectedArtist] = useState('');
 
   const [albums, setAlbums] = useState([]);
   const navigation = useNavigation();
 
+  //REDUX
+  //const [artists, setArtists] = useState([]);
+
+  // LES DEUX LIGNES ICI C'EST POUR INIT LE BAIL
+  const dispatch = useDispatch();
+  const artistState = useSelector(state => state.artist);
+  console.log("STATE ARTIST 1 DEV : " + artistState);
+
   useEffect(() => {
-    const artistRef = ref(db, 'artist');
-    get(artistRef)
-      .then(snapshot => {
-        const artists = [];
-        snapshot.forEach(childSnapshot => {
-          const artist = childSnapshot.key;
-          artists.push(artist);
-        });
-        setArtists(artists);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-     
-      
-  }, []);
+    //const artistRef = ref(db, 'artist');
+
+    //REDUX
+    //CA C'EST LE DISPATCH POUR UTILISER LE ARTIST STATE
+    dispatch(getAllArtists());
+
+
+    //OLD CLEM D.
+
+    // get(artistRef)
+    //   .then(snapshot => {
+    //     const artists = [];
+    //     snapshot.forEach(childSnapshot => {
+    //       const artist = childSnapshot.key;
+    //       artists.push(artist);
+    //     });
+    //     setArtists(artists);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
+
+    //=====
+    //ON RETURN LE BAIL ICI
+  }, [artistState]);
 
   useEffect(() => {
     if (selectedArtist) {
@@ -111,7 +133,9 @@ const addMusique = () => {
 
   const fetchAlbumsByArtist = artistName => {
     const albumsRef = ref(db, `artist/${artistName}/`);
-    console.log('test');
+
+    console.log('testvartiaste');
+
     get(albumsRef)
       .then(snapshot => {
         const albums = [];
@@ -131,8 +155,8 @@ const addMusique = () => {
   const storageRef = firebase.storage().ref();
   useEffect(
     () => {
-      console.log(audioFile);
-      console.log(photoAlbumFile);
+      console.log("AUDIO : " + audioFile);
+      console.log("PHOTO : " + photoAlbumFile);
     },
     [audioFile],
     [photoAlbumFile],
@@ -362,7 +386,7 @@ const addMusique = () => {
       {!isSelected ? (
         <SelectList
           setSelected={val => setSelected(val)}
-          data={artists}
+          data={artistState} //ON UTLISE LE ARTIST STATE NORMALEMENT ENSUITE
           save="value"
           placeholder={t('resources.addMusic.selectArtist')}
           onSelect={handleArtistChange}

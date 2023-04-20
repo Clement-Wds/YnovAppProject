@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import notifee from '@notifee/react-native';
 import {
   View,
   Text,
@@ -9,7 +8,10 @@ import {
   Image,
   SafeAreaView,
   TouchableOpacity,
+  Share,
+  Alert,
 } from 'react-native';
+import styled from 'styled-components/native';
 import {musiclibrary} from '../../data';
 import LinearGradient from 'react-native-linear-gradient';
 import TrackPlayerScreen from '../../src/components/TrackPlayerScreen';
@@ -19,13 +21,14 @@ import TrackPlayer, {
   useTrackPlayerEvents,
   Event,
   State,
-  useProgress
+  useProgress,
 } from 'react-native-track-player';
 import {initializeApp} from 'firebase/app';
 import {ref, get} from 'firebase/database';
 import {getDatabase} from 'firebase/database';
 import {firebase} from '@react-native-firebase/auth';
 import config from '../../../firebase';
+
 
 const events = [
   Event.PlaybackState,
@@ -62,6 +65,9 @@ export default function TrackListScreen() {
   }
   const app = initializeApp(config);
   const db = getDatabase(app);
+
+  
+  
   
   const PlaylistImageView = () => (
     <>
@@ -73,7 +79,6 @@ export default function TrackListScreen() {
           source={{uri: 'https://www.bensound.com/bensound-img/punky.jpg'}}
         />
       </LinearGradient>
-      
     </>
   );
   const onSelectTrack = async (selectedTrack, index) => {
@@ -98,41 +103,25 @@ export default function TrackListScreen() {
     }
   });
 
-
-const playOrPause = async isCurrentTrack => {
-      const state = await TrackPlayer.getState();
-      if (state === State.Paused && isCurrentTrack) {
-
-        await notifee.createChannel({
-          id: 'music',
-          name: 'Lecture en cours',
-        });
-    
-        await notifee.displayNotification({
-          title: 'Lecture en cours',
-          body: 'Vous écoutez de la musique !',
-          android: {
-            channelId: 'music',
-          },
-        });
-
-        setIsPlaying(!isPlaying);
-        TrackPlayer.play();
-        return;
-      }
-      if (state === State.Playing && isCurrentTrack) {
-        setIsPlaying(!isPlaying);
-        TrackPlayer.pause();
-        return;
-      }
-      setIsPlaying(true);
+  const playOrPause = async isCurrentTrack => {
+    const state = await TrackPlayer.getState();
+    if (state === State.Paused && isCurrentTrack) {
+      setIsPlaying(!isPlaying);
       TrackPlayer.play();
-    };
+      return;
+    }
+    if (state === State.Playing && isCurrentTrack) {
+      setIsPlaying(!isPlaying);
+      TrackPlayer.pause();
+      return;
+    }
+    setIsPlaying(true);
+    TrackPlayer.play();
+  };
 
-
-    const onSeekTrack = newTimeStamp => {
-      TrackPlayer.seekTo(newTimeStamp);
-    };
+  const onSeekTrack = newTimeStamp => {
+    TrackPlayer.seekTo(newTimeStamp);
+  };
   const onPressNext = () => {
     setSelectedMusic(
       musiclibrary[(selectedMusicIndex + 1) % musiclibrary.length],
@@ -156,12 +145,17 @@ const playOrPause = async isCurrentTrack => {
     return (
       <>
         {index === 0 && <PlaylistImageView />}
-        <Pressable onPress={() => onSelectTrack(item, index)}>
-          <View>
-            <Text style={styles.musicTitle}>{item.title}</Text>
-            <Text style={styles.artisteTitle}>{item.artist}</Text>
-          </View>
-        </Pressable>
+        <MusicItem>
+          <Pressable onPress={() => onSelectTrack(item, index)}>
+            <View>
+              <MusicTitle>{item.title}</MusicTitle>
+              <ArtisteTitle>{item.artist}</ArtisteTitle>
+            </View>
+          </Pressable>
+          <Pressable onPress={() => onShare()}>
+            <Logo source={require('../assets/share.png')} />
+          </Pressable>
+        </MusicItem>
       </>
     );
   };
@@ -179,8 +173,10 @@ const playOrPause = async isCurrentTrack => {
           timestamp={Math.round(position)}
           onPressNext={onPressNext}
           onPressPrev={onPressPrev}
-          playbackMode={mode}          
-          onClickLoop={()=> mode === "loop" ? setMode("loop") : setMode("off")}
+          playbackMode={mode}
+          onClickLoop={() =>
+            mode === 'loop' ? setMode('loop') : setMode('off')
+          }
         />
       )}
       <View style={[styles.widgetContainer, {justifyContent: 'center'}]}>
@@ -197,7 +193,6 @@ const playOrPause = async isCurrentTrack => {
         <Pressable onPress={() => setisPlayerModalVisible(true)}>
           <View style={[styles.widgetContainer, {}]}>
             <View style={{flexDirection: 'row'}}>
-
               <Image
                 resizeMode="cover"
                 source={{uri: selectedMusic.artwork}}
@@ -212,11 +207,11 @@ const playOrPause = async isCurrentTrack => {
                   {selectedMusic.artist}
                 </Text>
               </View>
-              
             </View>
             <Pressable onPress={() => playOrPause()}>
               <Image
-                source={isPlaying ? PauseIcon : PlayIcon}                style={{height: 30, tintColor: '#fff', width: 30}}
+                source={isPlaying ? PauseIcon : PlayIcon}
+                style={{height: 30, tintColor: '#fff', width: 30}}
               />
             </Pressable>
           </View>
@@ -225,6 +220,28 @@ const playOrPause = async isCurrentTrack => {
     </View>
   );
 }
+const MusicItem = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+`;
+
+const MusicTitle = styled.Text`
+  font-size: 16px;
+  font-weight: bold;
+  color: ${props => props.theme.colors.main};
+`;
+
+const ArtisteTitle = styled.Text`
+  font-size: 14px;
+  color: ${props => props.theme.colors.main};
+`;
+
+const Logo = styled.Image`
+  width: 20px;
+  height: 20px;
+`;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -245,6 +262,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 12,
     marginTop: 1,
+  },
+  shareIcon: {
+    width: 24,
+    height: 24,
   },
   widgetContainer: {
     flexDirection: 'row',

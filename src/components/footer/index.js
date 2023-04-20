@@ -25,7 +25,7 @@ const Footer = () => {
         <Logo source={require('../../assets/user.png')} />
         <Title>{t('resources.footer.login')}</Title>
       </SearchButton>
-      
+
       <LibraryButton onPress={() => navigation.navigate('Library')}>
         <Logo source={require('../../assets/library.png')} />
         <Title>{t('resources.footer.library')}</Title>

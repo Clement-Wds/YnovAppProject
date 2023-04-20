@@ -29,6 +29,9 @@ import {getDatabase} from 'firebase/database';
 import {firebase} from '@react-native-firebase/auth';
 import config from '../../../firebase';
 
+import { useSelector, useDispatch } from 'react-redux';
+import {profileDetailsRequest} from "../../actions/profile";
+
 
 const events = [
   Event.PlaybackState,
@@ -45,6 +48,21 @@ export default function TrackListScreen() {
   const [timestamp, setTimestamp] = useState(0);
   const [mode, setMode] = useState('shuffle');
   const {position} = useProgress();
+
+  const [user, setUser] = useState(null);
+
+  const dispatch = useDispatch();
+  const profileState = useSelector(state => state.profile.user);
+  console.log("STATE : " + profileState);
+
+  useEffect(() => {
+    if(user) {
+      //UTILISATION DE REDUX pour afficher l'utilisateur
+      dispatch(profileDetailsRequest(user));
+    }
+  }, [user]);
+
+  console.log("USER UID : ", profileState?.uid);
 
   useTrackPlayerEvents(events, event => {
     if (event.type === Event.PlaybackError) {
@@ -106,6 +124,18 @@ export default function TrackListScreen() {
   const playOrPause = async isCurrentTrack => {
     const state = await TrackPlayer.getState();
     if (state === State.Paused && isCurrentTrack) {
+      await notifee.createChannel({
+        id: 'music',
+        name: 'Lecture en cours',
+      });
+  
+      await notifee.displayNotification({
+        title: 'Lecture en cours',
+        body: 'Vous écoutez de la musique !',
+        android: {
+          channelId: 'music',
+        },
+      });
       setIsPlaying(!isPlaying);
       TrackPlayer.play();
       return;

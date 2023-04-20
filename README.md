@@ -46,7 +46,7 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 - Utilisation de Notifee
 
  ## Page d'accueil / Albums et titres :
-![qemu-system-x86_64_sdgbQGIXAl](https://user-images.githubusercontent.com/56970054/233374415-ba320d77-3769-4f2c-a346-a304057698cc.gif)
+- ![qemu-system-x86_64_sdgbQGIXAl](https://user-images.githubusercontent.com/56970054/233374415-ba320d77-3769-4f2c-a346-a304057698cc.gif)
 
  ## Login / Page Profil :
 - ![qemu-system-x86_64_jzbX4dNVUM](https://user-images.githubusercontent.com/56970054/233375065-d56f5236-6d0d-47ea-b3eb-ad191d1f8ce7.gif)

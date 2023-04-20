@@ -27,7 +27,6 @@ import {getDatabase} from 'firebase/database';
 import {firebase} from '@react-native-firebase/auth';
 import config from '../../../firebase';
 
-
 const events = [
   Event.PlaybackState,
   Event.PlaybackError,
@@ -43,6 +42,7 @@ export default function TrackListScreen() {
   const [timestamp, setTimestamp] = useState(0);
   const [mode, setMode] = useState('shuffle');
   const {position} = useProgress();
+
   useTrackPlayerEvents(events, event => {
     if (event.type === Event.PlaybackError) {
       console.warn('An error occurred while playing the current track.');
@@ -62,9 +62,6 @@ export default function TrackListScreen() {
   }
   const app = initializeApp(config);
   const db = getDatabase(app);
-
-  
-  
   
   const PlaylistImageView = () => (
     <>

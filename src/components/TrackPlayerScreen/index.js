@@ -28,22 +28,6 @@ export default function TrackPlayerScreen({
   onClickShuffle,
   onClickLoop,
 }) {
-
-  const [user, setUser] = useState(null);
-
-  const dispatch = useDispatch();
-  const profileState = useSelector(state => state.profile.user);
-  console.log("STATE : " + profileState);
-
-  useEffect(() => {
-    if(user) {
-      //UTILISATION DE REDUX pour afficher l'utilisateur
-      dispatch(profileDetailsRequest(user));
-    }
-  }, [user]);
-
-  console.log("USER UID : ", profileState?.uid);
-  
   return (
     <Modal
       animationType="slide"

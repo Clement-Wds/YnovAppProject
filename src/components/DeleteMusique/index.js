@@ -1,10 +1,5 @@
 import React, {useState} from 'react';
-import {
-  TouchableOpacity,
-  Text,
-  View,
-  PermissionsAndroid,
-} from 'react-native';
+import {Text, Alert} from 'react-native';
 import {initializeApp} from 'firebase/app';
 import config from '../../../firebase';
 import {useEffect} from 'react';
@@ -14,13 +9,10 @@ import '@react-native-firebase/storage';
 import 'firebase/storage';
 import '@react-native-firebase/database';
 import styled from 'styled-components/native';
-import {requestMultiple} from 'react-native-permissions';
 import {getDatabase} from 'firebase/database';
-import {ref, set, get, query, orderByChild, equalTo} from 'firebase/database';
+import {ref, set, get} from 'firebase/database';
 import Button from '../../components/button';
 import {useTranslation} from 'react-i18next';
-
-import firestore from '@react-native-firebase/firestore';
 
 import {SelectList} from 'react-native-dropdown-select-list';
 import CheckBox from '@react-native-community/checkbox';
@@ -59,7 +51,7 @@ const DeleteMusique = () => {
         setArtists(artists);
       })
       .catch(error => {
-        console.log(error);
+        Alert.alert('error', error);
       });
   }, []);
 
@@ -76,7 +68,7 @@ const DeleteMusique = () => {
           setAlbums(albums);
         })
         .catch(error => {
-          console.log(error);
+          Alert.alert('error', error);
         });
     }
   }, [selectedArtist]);
@@ -97,11 +89,10 @@ const DeleteMusique = () => {
           const album = childSnapshot.val();
           albums.push(album);
         });
-        console.log('les albums sont' && album);
         setAlbums(albums);
       })
       .catch(error => {
-        console.log(error);
+        Alert.alert('error', error);
       });
   };
 
@@ -126,7 +117,7 @@ const DeleteMusique = () => {
       });
       return musiques;
     } catch (error) {
-      console.log(`Error getting musiques for album ${albumName}: `, error);
+      Alert.alert(`Error getting musiques for album ${albumName}: ${error}`);
       return null;
     }
   };
@@ -140,7 +131,6 @@ const DeleteMusique = () => {
         const albumRef = ref(db, `artist/${selectedArtist}/${selected2}`);
 
         // Delete album document from Firestore
-
         const albumDocRef = storageRef.child(
           `audio/artiste/${selectedArtist}/${selected2}`,
         );
@@ -159,22 +149,25 @@ const DeleteMusique = () => {
 
             Promise.all(deletePromises)
               .then(() => {
-                console.log('Files deleted successfully');
+                Alert.alert('success', 'Files deleted successfully');
               })
               .catch(error => {
-                console.error(error);
+                Alert.alert('error', error);
               });
           })
           .catch(error => {
-            console.error(error);
+            Alert.alert('error', error);
           });
 
         // // Delete album from Realtime Database
         set(albumRef, null)
           .then(() =>
-            console.log('Album deleted successfully from Realtime Database!'),
+            Alert.alert(
+              'success',
+              'Album deleted successfully from Realtime Database!',
+            ),
           )
-          .catch(error => console.log(error));
+          .catch(error => Alert.alert('error', error));
       } else if (isSelected2) {
         const musicDocRef = storageRef.child(
           `audio/artiste/${selectedArtist}/${selectedAlbum}/${musiques}`,
@@ -182,10 +175,10 @@ const DeleteMusique = () => {
         musicDocRef
           .delete()
           .then(() => {
-            console.log('Music deleted successfully!');
+            Alert.alert('success', 'Music deleted successfully!');
           })
           .catch(error => {
-            console.error(error);
+            Alert.alert('error', error);
           });
       } else {
         // Delete artist document from Firestore
@@ -218,11 +211,11 @@ const DeleteMusique = () => {
                       });
                     })
                     .catch(error => {
-                      console.error(error);
+                      Alert.alert('error', error);
                     });
                 })
                 .catch(error => {
-                  console.error(error);
+                  Alert.alert('error', error);
                 });
             });
 
@@ -230,22 +223,25 @@ const DeleteMusique = () => {
 
             Promise.all(deletePromises)
               .then(() => {
-                console.log('Files deleted successfully');
+                Alert.alert('success', 'Files deleted successfully');
               })
               .catch(error => {
-                console.error(error);
+                Alert.alert('error', error);
               });
           })
           .catch(error => {
-            console.error(error);
+            Alert.alert('error', error);
           });
 
         // Delete artist from Realtime Database
         set(artistRef, null)
           .then(() =>
-            console.log('Artist deleted successfully from Realtime Database!'),
+            Alert.alert(
+              'success',
+              'Artist deleted successfully from Realtime Database!',
+            ),
           )
-          .catch(error => console.log(error));
+          .catch(error => Alert.alert('error', error));
       }
     }
   };
@@ -255,59 +251,59 @@ const DeleteMusique = () => {
   };
   return (
     <Container>
-    <Title>{t('resources.deleteMusic.deleteElement')}</Title>
+      <Title>{t('resources.deleteMusic.deleteElement')}</Title>
 
-    <DeleteSection>
-      <Text>{t('resources.deleteMusic.deleteAlbum')}</Text>
-      <CheckBox
-        disabled={false}
-        value={isSelected}
-        onValueChange={(newValue) => setSelection(newValue)}
-      />
-      <Text>{t('resources.deleteMusic.deleteMusic')}e</Text>
-      <CheckBox
-        disabled={false}
-        value={isSelected2}
-        onValueChange={handleSelection}
-      />
-
-<SelectList
-        setSelected={val => setSelected(val)}
-        data={artists}
-        save="value"
-        placeholder={t('resources.deleteMusic.selectArtist')}
-        onSelect={handleArtistChange}
-      />
-
-{isSelected ? (
-        <SelectList
-          setSelected={val => setSelected2(val)}
-          data={albums}
-          save="value"
-          placeholder={t('resources.deleteMusic.selectAlbum')}
-          onSelect={handleAlbumChange}
+      <DeleteSection>
+        <Text>{t('resources.deleteMusic.deleteAlbum')}</Text>
+        <CheckBox
+          disabled={false}
+          value={isSelected}
+          onValueChange={newValue => setSelection(newValue)}
         />
-      ) : null}
-
-      {isSelected2 ? (
-        <SelectList
-        setSelected={val => setSelected3(val)}
-        data={musiques}
-          save="value"
-          placeholder={t('resources.deleteMusic.selectMusic')}
-          
+        <Text>{t('resources.deleteMusic.deleteMusic')}e</Text>
+        <CheckBox
+          disabled={false}
+          value={isSelected2}
+          onValueChange={handleSelection}
         />
-      ) : null}
 
-      <Button title={t('resources.deleteMusic.delete')} onPress={handleDelete} />
-    </DeleteSection>
-  </Container>
+        <SelectList
+          setSelected={val => setSelected(val)}
+          data={artists}
+          save="value"
+          placeholder={t('resources.deleteMusic.selectArtist')}
+          onSelect={handleArtistChange}
+        />
 
+        {isSelected ? (
+          <SelectList
+            setSelected={val => setSelected2(val)}
+            data={albums}
+            save="value"
+            placeholder={t('resources.deleteMusic.selectAlbum')}
+            onSelect={handleAlbumChange}
+          />
+        ) : null}
+
+        {isSelected2 ? (
+          <SelectList
+            setSelected={val => setSelected3(val)}
+            data={musiques}
+            save="value"
+            placeholder={t('resources.deleteMusic.selectMusic')}
+          />
+        ) : null}
+
+        <Button
+          title={t('resources.deleteMusic.delete')}
+          onPress={handleDelete}
+        />
+      </DeleteSection>
+    </Container>
   );
 };
 
 export default DeleteMusique;
-
 
 const Container = styled.View`
   flex: 1;
@@ -323,4 +319,3 @@ const Title = styled.Text`
 const DeleteSection = styled.View`
   margin-top: 20px;
 `;
-

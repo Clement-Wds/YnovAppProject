@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import {View, Text, Modal, Image, StyleSheet, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
 import LinearGradient from 'react-native-linear-gradient';
@@ -10,6 +10,9 @@ import PlayIcon from '../../assets/play.png';
 import PauseIcon from '../../assets/pause.png';
 import MenuIcon from '../../assets/down.png';
 import {secsToTimestamp} from '../../config/timeFormat';
+
+import { useSelector, useDispatch } from 'react-redux';
+import {profileDetailsRequest} from "../../actions/profile";
 
 export default function TrackPlayerScreen({
   isVisible,
@@ -25,6 +28,21 @@ export default function TrackPlayerScreen({
   onClickShuffle,
   onClickLoop,
 }) {
+
+  const [user, setUser] = useState(null);
+
+  const dispatch = useDispatch();
+  const profileState = useSelector(state => state.profile.user);
+  console.log("STATE : " + profileState);
+
+  useEffect(() => {
+    if(user) {
+      //UTILISATION DE REDUX pour afficher l'utilisateur
+      dispatch(profileDetailsRequest(user));
+    }
+  }, [user]);
+
+  console.log("USER UID : ", profileState?.uid);
   
   return (
     <Modal

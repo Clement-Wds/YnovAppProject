@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
+import {Alert} from 'react-native';
 import styled from 'styled-components/native';
 import {useTranslation} from 'react-i18next';
 import {initializeApp} from 'firebase/app';
-import {ref, set, get, query, orderByChild, equalTo} from 'firebase/database';
+import {ref, get} from 'firebase/database';
 import 'firebase/storage';
 import {getDatabase} from 'firebase/database';
 import {firebase} from '@react-native-firebase/auth';
@@ -24,7 +25,6 @@ const db = getDatabase(app);
 
 const HomeScreen = () => {
   const [artists, setArtists] = useState([]);
-  const [albums, setAlbums] = useState([]);
   const [allAlbums, setAllAlbums] = useState([]);
   const [allArtists, setAllArtists] = useState([]);
 
@@ -43,32 +43,9 @@ const HomeScreen = () => {
         setArtists(artists);
       })
       .catch(error => {
-        console.log(error);
+        Alert.alert('error', error);
       });
   }, []);
-
-  //Fonction Faouizi
-
-  // useEffect(() => {
-  //   const albumsRef = ref(db, 'artist');
-  //   get(albumsRef)
-  //     .then(snapshot => {
-  //       const albums = [];
-  //       snapshot.forEach(childSnapshot => {
-  //         const artistAlbums = childSnapshot.val();
-  //         Object.keys(artistAlbums).forEach(album => {
-  //           albums.push(album);
-  //         });
-  //       });
-  //       setAlbums(albums);
-  //       console.log(albums);
-
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  //   //Récuperer l'image de l'album
-  // }, []);
 
   useEffect(() => {
     const albumsRef = ref(db, 'artist');
@@ -91,7 +68,7 @@ const HomeScreen = () => {
                 .list()
                 .then(res => {
                   if (res.items.length === 0) {
-                    console.log(`No photo found for album ${albumName}`);
+                    Alert.alert(`No photo found for album ${albumName}`);
                     return {name: albumName, photo: null};
                   }
                   return res.items[0].getDownloadURL().then(url => {
@@ -99,9 +76,9 @@ const HomeScreen = () => {
                   });
                 })
                 .catch(error => {
-                  console.log(
+                  Alert.alert(
+                    'error',
                     `Error getting download URL for album ${albumName}: `,
-                    error,
                   );
                   return {name: albumName, photo: null};
                 });
@@ -114,7 +91,7 @@ const HomeScreen = () => {
         });
       })
       .catch(error => {
-        console.log('Error getting albums:', error);
+        Alert.alert('error', `Error getting albums: ${error}`);
       });
   }, []);
   console.log(allAlbums);
@@ -137,7 +114,10 @@ const HomeScreen = () => {
               .list()
               .then(res => {
                 if (res.items.length === 0) {
-                  console.log(`No photo found for artist ${artistName}`);
+                  Alert.alert(
+                    'error',
+                    `No photo found for artist ${artistName}`,
+                  );
                   return {name: childSnapshot.key, photo: null};
                 }
                 return res.items[0].getDownloadURL().then(url => {
@@ -145,9 +125,9 @@ const HomeScreen = () => {
                 });
               })
               .catch(error => {
-                console.log(
+                Alert.alert(
+                  'error',
                   `Error getting download URL for artist ${childSnapshot.key}: `,
-                  error,
                 );
                 return {name: childSnapshot.key, photo: null};
               });
@@ -159,7 +139,7 @@ const HomeScreen = () => {
         });
       })
       .catch(error => {
-        console.log('Error getting artists:', error);
+        Alert.alert('error', `Error getting artists: ${error}`);
       });
   }, []);
 
@@ -193,9 +173,7 @@ const HomeScreen = () => {
       </SectionTitle>
       <ArtistList horizontal>
         {allAlbums.map(album => (
-          <StyledTouchableOpacity
-            key={album.name}
-            onPress={() => console.log('Album selected:', album)}>
+          <StyledTouchableOpacity key={album.name}>
             <AlbumItem key={album.name}>
               <CoverImage source={{uri: album.photo}} />
               <SongTitle>{album.name}</SongTitle>
@@ -214,9 +192,7 @@ const HomeScreen = () => {
     </ContainerScrollView>
   );
 };
-const RecentlyPlayedContainer = styled.ScrollView`
-  margin-top: 16px;
-`;
+
 const StyledTouchableOpacity = styled.TouchableOpacity``;
 
 const AlbumItem = styled.View`
@@ -224,23 +200,7 @@ const AlbumItem = styled.View`
   margin-right: 16px;
   flex-direction: column;
 `;
-const RecentlyPlayedItem = styled.View`
-  align-items: center;
-  margin-right: 16px;
-  flex-direction: column;
-`;
-const Initial = styled.Text`
-  color: #fff;
-  font-size: 24px;
-  font-weight: bold;
-  margin-right: 10px;
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  background-color: #1db954;
-  text-align: center;
-  line-height: 40px;
-`;
+
 const PlaylistItem = styled.View`
   align-items: center;
   margin-right: 16px;
@@ -263,12 +223,6 @@ const CoverImage = styled.Image`
 const SongTitle = styled.Text`
   font-size: ${props => props.theme.fontSizes.medium};
   color: ${props => props.theme.text.main};
-`;
-
-const ArtistName = styled.Text`
-  font-size: ${props => props.theme.fontSizes.small};
-  color: ${props => props.theme.text.light};
-  margin-top: 4px;
 `;
 
 const ContainerScrollView = styled.ScrollView`
@@ -305,26 +259,6 @@ const ArtistContainer = styled.View`
 
 const ArtistList = styled.ScrollView`
   flex-grow: 0;
-`;
-
-const ArtistIcon = styled.Image`
-  width: 150px;
-  height: 150px;
-  margin-right: 16px;
-`;
-
-const Albums = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 16px;
-  margin-bottom: 32px;
-`;
-const AlbumImage = styled.Image`
-  width: 150px;
-  height: 150px;
-
-  border-radius: 70px;
-  border-width: 1px;
 `;
 
 export default HomeScreen;

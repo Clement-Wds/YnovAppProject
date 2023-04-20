@@ -4,21 +4,20 @@ import styled from 'styled-components/native';
 import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 import {initializeApp} from 'firebase/app';
 import firebaseConfig from '../../../firebase';
-import {Alert,Text} from 'react-native';
+import {Alert, Text} from 'react-native';
 import '@react-native-firebase/firestore';
 import {firebase} from '@react-native-firebase/auth';
 import Button from '../../components/button';
 import {useTranslation} from 'react-i18next';
 import CheckBox from '@react-native-community/checkbox';
-import {ref, getDatabase,get} from 'firebase/database';
+import {ref, getDatabase, get} from 'firebase/database';
 
-import { useSelector, useDispatch } from 'react-redux';
-import {profileDetailsRequest} from "../../actions/profile";
+import {useSelector, useDispatch} from 'react-redux';
+import {profileDetailsRequest} from '../../actions/profile';
 
 import {
   GoogleSignin,
   statusCodes,
-  GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 
 const LoginScreen = () => {
@@ -41,20 +40,15 @@ const LoginScreen = () => {
   });
   const [isSelected, setSelection] = useState(false);
 
-
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, inputs.email, inputs.password)
       .then(userCredential => {
         // Signed in
         const user = userCredential.user;
-
         return userCredential.user.getIdToken();
-        // ...
       })
       .then(accessToken => {
-        //AsyncStorage.setItem('token', accessToken);
-        //navigation.navigate('Home');
-        console.log('good' && accessToken);
+        Alert.alert('success', 'Succes to login');
       })
       .catch(error => {
         const errorCode = error.code;
@@ -74,7 +68,7 @@ const LoginScreen = () => {
             [{text: 'OK'}],
           );
         } else {
-          console.log(errorMessage);
+          Alert.alert('error', errorMessage);
         }
       });
   };
@@ -82,38 +76,32 @@ const LoginScreen = () => {
   const loginUserWithGoogle = () => {
     let idToken; // Déclarer une variable pour stocker idToken
 
-    
-
     GoogleSignin.signIn()
-    .then(({idToken: token, accessToken}) => {
-      // Stocker le token dans la variable
-      idToken = token; // Affecter la valeur du token à la variable idToken
-      const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken);
-      return firebase.auth().signInWithCredential(googleCredential);
-    })
-    .then(({user}) => {
-      console.log(user);
-  
-      const {uid, displayName, email, photoURL} = user;
-  
-  
-      // Récupérer les informations de l'utilisateur à partir de la base de données en temps réel de Firebase
-      return get(ref(db, `users/${uid}`));
-    })
-    .then((snapshot) => {
-      const user = snapshot.val();
-      console.log(user);
-  
-      // Dispatch l'action pour mettre à jour les détails de profil de l'utilisateur
-      dispatch(profileDetailsRequest(user));
-  
-      return console.log(idToken); //AsyncStorage.setItem('token', idToken); // Stocker idToken dans AsyncStorage
-    })
-    .then(() => {
-      //navigation.navigate('Home')
-  
-      Alert.alert('Success', 'You have successfully signed in!');
-    })
+      .then(({idToken: token, accessToken}) => {
+        // Stocker le token dans la variable
+        idToken = token; // Affecter la valeur du token à la variable idToken
+        const googleCredential =
+          firebase.auth.GoogleAuthProvider.credential(idToken);
+        return firebase.auth().signInWithCredential(googleCredential);
+      })
+      .then(({user}) => {
+        console.log(user);
+        const {uid, displayName, email, photoURL} = user;
+        // Récupérer les informations de l'utilisateur à partir de la base de données en temps réel de Firebase
+        return get(ref(db, `users/${uid}`));
+      })
+      .then(snapshot => {
+        const user = snapshot.val();
+        console.log(user);
+
+        // Dispatch l'action pour mettre à jour les détails de profil de l'utilisateur
+        dispatch(profileDetailsRequest(user));
+
+        return console.log(idToken); // Stocker idToken dans AsyncStorage
+      })
+      .then(() => {
+        Alert.alert('Success', 'You have successfully signed in!');
+      })
       .catch(error => {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
           Alert.alert('Cancelled', 'Sign-in was cancelled!');
@@ -146,19 +134,17 @@ const LoginScreen = () => {
           secureTextEntry={isSelected ? false : true}
           onChangeText={text => setInputs({...inputs, password: text})}
         />
-      <Text>{t('resources.login.showPassword')}</Text>
-      <CheckBox
-        disabled={false}
-        value={isSelected}
-        onValueChange={newValue => setSelection(newValue)}
-      />
+        <Text>{t('resources.login.showPassword')}</Text>
+        <CheckBox
+          disabled={false}
+          value={isSelected}
+          onValueChange={newValue => setSelection(newValue)}
+        />
         <Button title={t('resources.login.title')} onPress={handleLogin} />
-        <Button title={t('resources.login.google')} onPress={loginUserWithGoogle} />
-        {/* <GoogleSigninButton
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Light}
+        <Button
+          title={t('resources.login.google')}
           onPress={loginUserWithGoogle}
-        /> */}
+        />
 
         <RegisterLink onPress={() => navigation.navigate('Register')}>
           <RegisterText>{t('resources.login.alreadyHaveAccount')}</RegisterText>

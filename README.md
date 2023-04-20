@@ -45,6 +45,9 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 - Lecteur de musique version finale et propre
 - Utilisation de Notifee
 
+![qemu-system-x86_64_sdgbQGIXAl](https://user-images.githubusercontent.com/56970054/233374415-ba320d77-3769-4f2c-a346-a304057698cc.gif)
+
+
 ## Bonus :
 - Détecter le thème utilisateur
 - Authentification par Google (OAuth)

@@ -17,7 +17,6 @@ const ProfileScreen = () => {
 
   const dispatch = useDispatch();
   const profileState = useSelector(state => state.profile.user);
-  console.log('STATE : ' + profileState);
 
   const [token, setToken] = useState(null);
 

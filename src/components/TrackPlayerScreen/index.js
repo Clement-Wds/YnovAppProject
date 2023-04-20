@@ -1,8 +1,7 @@
-import React, { useEffect,useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Modal, Image, StyleSheet, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
 import LinearGradient from 'react-native-linear-gradient';
-import ShuffleIcon from '../../assets/shuffle.png';
 import PrevIcon from '../../assets/prev.png';
 import NextIcon from '../../assets/next.png';
 import LoopIcon from '../../assets/loop.png';
@@ -22,7 +21,6 @@ export default function TrackPlayerScreen({
   onPressNext,
   onPressPrev,
   playbackMode,
-  onClickShuffle,
   onClickLoop,
 }) {
   return (
@@ -84,14 +82,15 @@ export default function TrackPlayerScreen({
           </Text>
         </View>
         <View style={styles.timeStampHolder}>
-          <View/>
+          <View />
           <Pressable onPress={onPressPrev}>
             <Image style={styles.iconWidth} source={PrevIcon} />
           </Pressable>
           <Pressable onPress={playOrPause} style={styles.playButtonHolder}>
             <Image
               style={[styles.iconWidth, {tintColor: '#000'}]}
-              source={isPlaying ? PauseIcon : PlayIcon}            />
+              source={isPlaying ? PauseIcon : PlayIcon}
+            />
           </Pressable>
           <Pressable onPress={onPressNext}>
             <Image style={styles.iconWidth} source={NextIcon} />
@@ -110,6 +109,8 @@ export default function TrackPlayerScreen({
     </Modal>
   );
 }
+
+//DESO ZAK OUPSI (Pas eu le tps de faire celui-là aussi)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -132,8 +133,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     opacity: 0.8,
     marginHorizontal: 20,
-    // marginBottom: 12,
-    // marginTop: 1,
   },
   linearGradient: {
     width: '100%',

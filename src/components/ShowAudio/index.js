@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, Alert} from 'react-native';
 import {useDispatch, useSelector} from 'redux';
 import {getFirestore, collection, getDocs} from 'firebase/firestore';
 import {getStorage, ref, getDownloadURL} from 'firebase/storage';

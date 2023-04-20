@@ -1,7 +1,6 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {TouchableWithoutFeedback} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import * as React from 'react';
 import {useEffect, useState} from 'react';
@@ -21,12 +20,10 @@ import AlbumScreenCard from '../screens/albumSong';
 import Logout from '../screens/logout';
 import TrackList from '../screens/TrackListScreen';
 
-
 import {useSelector, useDispatch} from 'react-redux';
 import {profileDetailsRequest} from '../../src/actions/profile';
-import {getAuth, onAuthStateChanged, signOut} from 'firebase/auth';
+import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {compose} from 'redux';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -136,7 +133,6 @@ const BottomTabNavigator = () => {
           }}
         />
       )}
-      
     </Tab.Navigator>
   );
 };
@@ -158,34 +154,6 @@ const GlobalSafeArea = styled.SafeAreaView`
 const Logo = styled.Image`
   width: 20px;
   height: 20px;
-`;
-const LoginOptionsContainer = styled.View`
-  position: absolute;
-  top: 60px;
-  right: 10px;
-  width: 120px;
-  background-color: #fff;
-  border-radius: 5px;
-  elevation: 3;
-  z-index: 1;
-`;
-const StyledIcon = styled.Image`
-  width: 20px;
-  height: 20px;
-`;
-const StyledTouchableOpacity = styled.TouchableOpacity`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 20px;
-  height: 20px;
-  background-color: #fff;
-  border-radius: 5px;
-  elevation: 3;
-  z-index: 1;
-`;
-const LoginOption = styled.Text`
-  padding: 10px;
 `;
 
 export default Routes;

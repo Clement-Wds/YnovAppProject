@@ -9,16 +9,15 @@ import '@react-native-firebase/firestore';
 import {
   GoogleSignin,
   statusCodes,
-  GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 import Button from '../../components/button';
-import React,{useEffect, useState}from 'react';
+import React, {useEffect, useState} from 'react';
 
-import {Alert,PermissionsAndroid,Text} from 'react-native';
+import {Alert, PermissionsAndroid, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 
-import { getDatabase, ref, set,get } from "firebase/database";
+import {getDatabase, ref, set, get} from 'firebase/database';
 import 'firebase/auth';
 import 'firebase/firestore';
 //import Geolocation from '@react-native-community/geolocation'; pour avoir la locatio exact
@@ -28,18 +27,15 @@ import CheckBox from '@react-native-community/checkbox';
 import {requestMultiple} from 'react-native-permissions';
 
 const RegisterPage = () => {
-
   const requestPermissions = async () => {
     const result = await requestMultiple([
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    
     ]);
-    console.log(result);
   };
   useEffect(() => {
     requestPermissions();
   }, []);
- 
+
   const {t} = useTranslation();
   const navigation = useNavigation();
   GoogleSignin.configure({
@@ -57,40 +53,20 @@ const RegisterPage = () => {
     password: '',
     password_confirmation: '',
   });
-  const [positionGPS, setPositionGPS]= React.useState({
-    longitude:'',
-    latitude:''
-  })
-  const[codePays, setCodePays] = useState('');
+  const [positionGPS, setPositionGPS] = React.useState({
+    longitude: '',
+    latitude: '',
+  });
+  const [codePays, setCodePays] = useState('');
 
-  const GetPosition = async () =>{
-
+  const GetPosition = async () => {
     try {
       await requestPermissions();
-      setCodePays(RNLocalize.getCountry())
-      //Code pour récupérer coordonée exact 
-      // Geolocation.getCurrentPosition(
-   
-      //   (position) => {
-      //     setPositionGPS({...positionGPS, latitude: position.coords.latitude})
-      //     setPositionGPS({...positionGPS, longitude: position.coords.longitude})
-      //     console.log(positionGPS.latitude);
-      //     console.log(positionGPS.longitude);
-      //     console.log(codePays);
-      //   },
-      //   (error) => {
-      //     console.log(error.code, error.message);
-      //   },
-      //   { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-      
-      // );
-
-    }catch (err) {
-      console.log('Error selecting audio file: ', err);
+      setCodePays(RNLocalize.getCountry());
+    } catch (err) {
+      Alert.alert('error', `Error selecting audio file: ${err}`);
     }
-
-  }
-  
+  };
 
   const HandleRegister = () => {
     if (inputs.password == inputs.password_confirmation) {
@@ -99,7 +75,7 @@ const RegisterPage = () => {
           // Signed in
           const user = userCredential.user;
           const db = getDatabase();
-          GetPosition()
+          GetPosition();
           const userRef = ref(db, 'users/' + user.uid);
 
           // Enregistrer les informations de l'utilisateur dans la base de données
@@ -108,33 +84,23 @@ const RegisterPage = () => {
             displayName: user.displayName,
             photoURL: user.photoURL,
             pays: user.codePays,
-            uid: user.uid
+            uid: user.uid,
             //others
           };
 
           return set(userRef, userData);
-
-          //return userCredential.user.getIdToken(); ->OLD CODE CLEM
-          // ...
         })
         .then(() => {
-          console.log('Utilisateur enregistré avec succès dans la base de données Firebase');
+          Alert.alert('success', 'Utilisateur enregistré avec succès.');
         })
-        // .then(accessToken => {
-        //   //AsyncStorage.setItem('token', accessToken);
-        //   console.log(accessToken)
-          
-        // }) -> OLD CODE CLEM d
         .catch(error => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // ..
+          Alert.alert('error', error);
         });
     } else {
-      console.log('Les mots de passes ne correspondent pas ');
+      Alert.alert('error', 'Les mots de passes ne correspondent pas');
     }
   };
-  
+
   const createUserWithGoogle = () => {
     GoogleSignin.signIn()
       .then(({idToken, accessToken}) => {
@@ -152,7 +118,7 @@ const RegisterPage = () => {
               email,
               photoURL,
               pays: codePays,
-              uid: uid
+              uid: uid,
             };
             return get(userRef).then(snapshot => {
               if (snapshot.exists()) {
@@ -164,12 +130,12 @@ const RegisterPage = () => {
                 };
                 // Mettre à jour les informations existantes avec les nouvelles données fusionnées
                 return set(userRef, mergedData).then(() => {
-                  console.log('Utilisateur fusionné avec succès dans la base de données Firebase');
+                  Alert.alert('success', 'Utilisateur fusionné avec succès.');
                 });
               } else {
                 // L'utilisateur n'existe pas encore dans la base de données
                 return set(userRef, userData).then(() => {
-                  console.log('Utilisateur enregistré avec succès dans la base de données Firebase');
+                  Alert.alert('success', 'Utilisateur enregistré avec succès');
                 });
               }
             });
@@ -231,8 +197,11 @@ const RegisterPage = () => {
         onValueChange={newValue => setSelection2(newValue)}
       />
       <Button title={t('resources.register.title')} onPress={HandleRegister} />
-     
-      <Button title={t('resources.register.google')} onPress={createUserWithGoogle} />
+
+      <Button
+        title={t('resources.register.google')}
+        onPress={createUserWithGoogle}
+      />
       <RegisterLink onPress={() => navigation.navigate('Login')}>
         <RegisterText>
           {t('resources.register.alreadyHaveAccount')}

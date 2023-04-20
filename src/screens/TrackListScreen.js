@@ -7,7 +7,6 @@ import {
   Pressable,
   Image,
   SafeAreaView,
-  TouchableOpacity,
   Share,
   Alert,
 } from 'react-native';
@@ -24,7 +23,6 @@ import TrackPlayer, {
   useProgress,
 } from 'react-native-track-player';
 import {initializeApp} from 'firebase/app';
-import {ref, get} from 'firebase/database';
 import {getDatabase} from 'firebase/database';
 import {firebase} from '@react-native-firebase/auth';
 import config from '../../firebase';
@@ -55,7 +53,6 @@ export default function TrackListScreen() {
 
   const dispatch = useDispatch();
   const profileState = useSelector(state => state.profile.user);
-  console.log('STATE : ' + profileState);
 
   useEffect(() => {
     if (user) {
@@ -63,8 +60,6 @@ export default function TrackListScreen() {
       dispatch(profileDetailsRequest(user));
     }
   }, [user]);
-
-  console.log('USER UID : ', profileState?.uid);
 
   useTrackPlayerEvents(events, event => {
     if (event.type === Event.PlaybackError) {
@@ -130,16 +125,10 @@ export default function TrackListScreen() {
   };
   useTrackPlayerEvents(events, event => {
     if (event.type === Event.PlaybackError) {
-      console.warn('An error occurred while playing the current track.');
-    }
-    if (event.type === Event.PlaybackState) {
-      console.log(event.type);
-    }
-    if (event.type === Event.RemotePlay) {
-      console.log(event.type);
-    }
-    if (event.type === Event.RemotePause) {
-      console.log(event.type);
+      Alert.alert(
+        'warning',
+        'An error occurred while playing the current track.',
+      );
     }
   });
 

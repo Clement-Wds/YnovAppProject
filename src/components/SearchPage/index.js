@@ -49,14 +49,6 @@ const SearchInput = styled.TextInput`
   color: ${props => props.theme.text.dark};
 `;
 
-const Title = styled.Text`
-  font-size: ${props => props.theme.fontSizes.mediumLarge};
-  font-weight: bold;
-  margin-bottom: 16px;
-  color: ${props => props.theme.text.main};
-
-  text-align: left;
-`;
 const SubTitle = styled.Text`
   font-size: ${props => props.theme.fontSizes.medium};
   font-weight: bold;

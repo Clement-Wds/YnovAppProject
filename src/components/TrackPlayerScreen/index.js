@@ -11,9 +11,6 @@ import PauseIcon from '../../assets/pause.png';
 import MenuIcon from '../../assets/down.png';
 import {secsToTimestamp} from '../../config/timeFormat';
 
-import { useSelector, useDispatch } from 'react-redux';
-import {profileDetailsRequest} from "../../actions/profile";
-
 export default function TrackPlayerScreen({
   isVisible,
   onCloseModal,

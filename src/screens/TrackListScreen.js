@@ -31,7 +31,7 @@ import config from '../../../firebase';
 
 import { useSelector, useDispatch } from 'react-redux';
 import {profileDetailsRequest} from "../../actions/profile";
-
+import notifee from "@notifee/react-native";
 
 const events = [
   Event.PlaybackState,

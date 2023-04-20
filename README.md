@@ -49,6 +49,8 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 ![qemu-system-x86_64_jzbX4dNVUM](https://user-images.githubusercontent.com/56970054/233375065-d56f5236-6d0d-47ea-b3eb-ad191d1f8ce7.gif)
 ![qemu-system-x86_64_J23bBdED2Y](https://user-images.githubusercontent.com/56970054/233375454-b64edacf-9d56-4185-aa11-72d578fdfa22.gif)
 ![qemu-system-x86_64_WSz19euiTv](https://user-images.githubusercontent.com/56970054/233377278-11a9a32b-037d-4702-812b-6870abee82a0.gif)
+Traduction : 
+![qemu-system-x86_64_7g5ZJPsYq8](https://user-images.githubusercontent.com/56970054/233378196-ef31907a-dcc5-4761-a9c8-208d7bf7d9c8.gif)
 
 
 ## Bonus :

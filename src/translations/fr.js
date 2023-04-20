@@ -8,12 +8,9 @@ export default {
         albums: 'Albums',
         recentlyPlayed: 'Joué récemment',
         trackName: 'Piste: {{name}}',
-        artists:'Artiste',
+        artists: 'Artiste',
+      },
 
-      },
-      library: {
-        title: 'Bibliothèque',
-      },
       albumscreen: {
         headertext: 'Albums récent',
       },
@@ -51,8 +48,8 @@ export default {
         passwordConfirm: 'Confirmer le mot de passe',
         alreadyHaveAccount: 'Vous avez déjà un compte ? Connectez-vous ici !',
         google: "S'inscrire avec Google",
-        showPassword:'Voir le mot de passe ?',
-        showPasswordConfirmation:'Voir la confirmation de mot de passe ?'
+        showPassword: 'Voir le mot de passe ?',
+        showPasswordConfirmation: 'Voir la confirmation de mot de passe ?',
       },
       login: {
         title: "S'identifier",
@@ -61,47 +58,40 @@ export default {
         password: 'Mot de passe',
         alreadyHaveAccount: "Vous n'avez pas de compte ? Inscrivez-vous ici !",
         google: "S'identifier avec Google",
-        showPassword:'Voir le mot de passe ?',
-        forgotPassword:'Mot de passe oublié ?',
-
-
+        showPassword: 'Voir le mot de passe ?',
+        forgotPassword: 'Mot de passe oublié ?',
       },
-     
+
       addMusic: {
         title: 'Ajouter de la musique',
         description: "Ceci est la page d'ajout de musique",
-        addElement:'Ajouter un élément',
-        selectArtist:'Sélectionnez un artiste',
-        selectArtistPhoto:"Sélectionnez une photo pour l'artiste",
-        selectAlbumPhoto:"Sélectionnez une photo pour l'album",
-        artistDoesntExist:"L'artiste n'existe pas dans la liste?",
-        albumDoesntExist:"L'album n'existe pas dans la liste?",
-        selectAlbum:'Sélectionnez un album',
-        selectAudio:'Sélectionnez un fichier audio',
-        download:'Télécharger',
-        delete:'Supprimer une musique',
-        artist:'Artiste',
-        album:'Album'
-
-
-
+        addElement: 'Ajouter un élément',
+        selectArtist: 'Sélectionnez un artiste',
+        selectArtistPhoto: "Sélectionnez une photo pour l'artiste",
+        selectAlbumPhoto: "Sélectionnez une photo pour l'album",
+        artistDoesntExist: "L'artiste n'existe pas dans la liste?",
+        albumDoesntExist: "L'album n'existe pas dans la liste?",
+        selectAlbum: 'Sélectionnez un album',
+        selectAudio: 'Sélectionnez un fichier audio',
+        download: 'Télécharger',
+        delete: 'Supprimer une musique',
+        artist: 'Artiste',
+        album: 'Album',
       },
-      deleteMusic:{
-        deleteElement:"Supprimer un élément",
-        deleteAlbum:"Supprimer un album",
-        deleteMusic:"Supprimer une musique",
-        selectArtist:'Sélectionnez un artiste',
-        selectAlbum:'Sélectionnez un album',
-        selectMusic:'Sélectionnez une musique',
-        delete:"Supprimer"
-
+      deleteMusic: {
+        deleteElement: 'Supprimer un élément',
+        deleteAlbum: 'Supprimer un album',
+        deleteMusic: 'Supprimer une musique',
+        selectArtist: 'Sélectionnez un artiste',
+        selectAlbum: 'Sélectionnez un album',
+        selectMusic: 'Sélectionnez une musique',
+        delete: 'Supprimer',
       },
-      profil:{
-        hello:'Bonjour',
-        displayName:"Nom d'utilisateur : ",
-        email:"Email : ",
-        state:"Pays : ",
-      
+      profil: {
+        hello: 'Bonjour',
+        displayName: "Nom d'utilisateur : ",
+        email: 'Email : ',
+        state: 'Pays : ',
       },
     },
   },

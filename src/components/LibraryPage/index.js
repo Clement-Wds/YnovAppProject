@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {Alert} from 'react-native';
 import {initializeApp} from 'firebase/app';
-import {ref, set, get, query, orderByChild, equalTo} from 'firebase/database';
+import {ref, get} from 'firebase/database';
 import 'firebase/storage';
 import {getDatabase} from 'firebase/database';
 import {firebase} from '@react-native-firebase/auth';
@@ -34,7 +34,7 @@ const LibraryScreen = () => {
         setArtists(artists);
       })
       .catch(error => {
-        console.log(error);
+        Alert.alert('error', error);
       });
   }, []);
 

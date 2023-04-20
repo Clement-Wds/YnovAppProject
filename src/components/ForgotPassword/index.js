@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {Alert} from 'react-native';
 import styled from 'styled-components/native';
 import Button from '../../components/button';
 import {initializeApp} from 'firebase/app';
@@ -11,10 +12,10 @@ const ForgotPassword = () => {
     const handleResetPassword = () => {
         firebase.auth().sendPasswordResetEmail(email)
           .then(() => {
-            console.log('Password reset email sent successfully');
+            Alert.alert("success", 'Password reset email sent successfully');
           })
           .catch((error) => {
-            console.log('Error sending password reset email: ', error);
+            Alert.alert('error', `Error sending password reset email: ${error}`);
           });
       };
 
@@ -70,15 +71,3 @@ const InputTitle = styled.Text`
   font-weight: bold;
   margin-bottom: 10px;
 `;
-
-const RegisterLink = styled.TouchableOpacity`
-  margin-top: 20px;
-  justify-content: center;
-`;
-
-const RegisterText = styled.Text`
-  color: #2f80ed;
-  font-size: 16px;
-`;
-
-

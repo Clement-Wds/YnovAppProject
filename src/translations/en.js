@@ -101,6 +101,16 @@ export default {
         email: 'Email : ',
         state: 'State : ',
       },
+      playlists: {
+        title: 'Playlists',
+        description: 'This is the playlists page',
+        createPlaylist: 'Create a playlist',
+        playlistName: 'Playlist name',
+        playlistDescription: 'Playlist description',
+        playlistImage: 'Playlist image',
+
+        addMusic: 'Add music',
+      },
     },
   },
 };

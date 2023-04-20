@@ -32,6 +32,7 @@ import config from '../../firebase';
 import {useSelector, useDispatch} from 'react-redux';
 import {profileDetailsRequest} from '../actions/profile';
 import notifee from '@notifee/react-native';
+import {useTranslation} from 'react-i18next';
 
 const events = [
   Event.PlaybackState,
@@ -48,6 +49,7 @@ export default function TrackListScreen() {
   const [timestamp, setTimestamp] = useState(0);
   const [mode, setMode] = useState('shuffle');
   const {position} = useProgress();
+  const {t, i18n} = useTranslation();
 
   const [user, setUser] = useState(null);
 
@@ -232,7 +234,7 @@ export default function TrackListScreen() {
         />
       )}
       <View style={[styles.widgetContainer, {justifyContent: 'center'}]}>
-        <Text style={styles.musicTitle}>Mettre le nom de la playlist</Text>
+        <Text style={styles.musicTitle}>{t('resources.playlists.title')}</Text>
       </View>
 
       <FlatList
@@ -294,6 +296,8 @@ const Logo = styled.Image`
   width: 20px;
   height: 20px;
 `;
+
+//Déso Zak, on a pas eu le temps :( Eid Mabrouk
 const styles = StyleSheet.create({
   container: {
     flex: 1,

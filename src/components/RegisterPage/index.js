@@ -107,7 +107,8 @@ const RegisterPage = () => {
             email: user.email,
             displayName: user.displayName,
             photoURL: user.photoURL,
-            pays: user.codePays
+            pays: user.codePays,
+            uid: user.uid
             //others
           };
 
@@ -150,7 +151,8 @@ const RegisterPage = () => {
               displayName,
               email,
               photoURL,
-              pays: codePays
+              pays: codePays,
+              uid: uid
             };
             return get(userRef).then(snapshot => {
               if (snapshot.exists()) {

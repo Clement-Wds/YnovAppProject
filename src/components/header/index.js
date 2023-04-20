@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, View, Modal} from 'react-native';
+import {TouchableOpacity, Modal} from 'react-native';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';

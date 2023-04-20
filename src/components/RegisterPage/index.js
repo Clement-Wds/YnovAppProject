@@ -47,11 +47,10 @@ const RegisterPage = () => {
       '395678982785-gmjfppo8ujm5f34i0ene0ivo6rh26k59.apps.googleusercontent.com',
     offlineAccess: false,
   });
-  const app = initializeApp(config);
   const [isSelected, setSelection] = useState(false);
   const [isSelected2, setSelection2] = useState(false);
 
-
+  const app = initializeApp(config);
   const auth = getAuth(app);
   const [inputs, setInputs] = React.useState({
     email: '',

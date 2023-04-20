@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, Text, Modal, Image, StyleSheet, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
 import LinearGradient from 'react-native-linear-gradient';
@@ -10,6 +10,7 @@ import PlayIcon from '../../assets/play.png';
 import PauseIcon from '../../assets/pause.png';
 import MenuIcon from '../../assets/down.png';
 import {secsToTimestamp} from '../../config/timeFormat';
+
 export default function TrackPlayerScreen({
   isVisible,
   onCloseModal,

@@ -5,8 +5,6 @@ import {getFirestore, collection, getDocs} from 'firebase/firestore';
 import {getStorage, ref, getDownloadURL} from 'firebase/storage';
 import styled from 'styled-components/native';
 
-import Notifee from '@notifee/react-native';
-
 // Action types
 const SET_AUDIO_FILES = 'SET_AUDIO_FILES';
 
@@ -47,24 +45,6 @@ const ShowAudio = () => {
   const handlePlayAudio = async title => {
     const audioRef = ref(getStorage(), `audio/${title}.mp3`);
     const audioURL = await getDownloadURL(audioRef);
-
-    //console.log('TEST');
-
-    // Créez une notification avec Notifee
-    // const channelId = await Notifee.createChannel({
-    //   id: 'audio-channel',
-    //   name: 'Audio Channel',
-    // });
-
-    // await Notifee.displayNotification({
-    //   title: 'Playing audio',
-    //   body: 'TEST',
-    //   android: {
-    //     channelId,
-    //   },
-    // });
-
-    // Utilisez audioURL pour lire le fichier audio dans votre application
   };
 
   const renderAudioItem = ({item}) => {

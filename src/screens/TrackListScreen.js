@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import notifee from '@notifee/react-native';
 import {
   View,
   Text,
@@ -89,6 +90,16 @@ export default function TrackListScreen() {
 
 
 const playOrPause = async isCurrentTrack => {
+
+      // Create notification
+      notifee.displayNotification({
+        title: 'Musique',
+        body: isPlaying ? 'Lecture en pause' : 'Lecture en cours',
+        android: {
+          channelId: 'music-player',
+        },
+      });
+
       const state = await TrackPlayer.getState();
       if (state === State.Paused && isCurrentTrack) {
         setIsPlaying(!isPlaying);

@@ -10,6 +10,7 @@ import {theme} from './src/components/styles/theme';
 import {musiclibrary} from './data';
 import TrackPlayerScreen from './src/components/TrackPlayerScreen';
 import TrackPlayer from 'react-native-track-player';
+
 const App = () => {
   const {t} = useTranslation();
   const setup = async () => {

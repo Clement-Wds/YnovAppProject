@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import notifee from '@notifee/react-native';
 import {
   View,
   Text,
@@ -23,6 +24,12 @@ import TrackPlayer, {
   State,
   useProgress,
 } from 'react-native-track-player';
+import {initializeApp} from 'firebase/app';
+import {ref, get} from 'firebase/database';
+import {getDatabase} from 'firebase/database';
+import {firebase} from '@react-native-firebase/auth';
+import config from '../../../firebase';
+
 
 const events = [
   Event.PlaybackState,
@@ -53,6 +60,7 @@ export default function TrackListScreen() {
       console.log(event.type);
     }
   });
+
   const onShare = async () => {
     try {
       const result = await Share.share({
@@ -75,6 +83,15 @@ export default function TrackListScreen() {
     }
   };
 
+  if (!firebase.apps.length) {
+    firebase.initializeApp(config);
+  }
+  const app = initializeApp(config);
+  const db = getDatabase(app);
+
+  
+  
+  
   const PlaylistImageView = () => (
     <>
       <LinearGradient
@@ -109,10 +126,34 @@ export default function TrackListScreen() {
     }
   });
 
-  const playOrPause = async isCurrentTrack => {
-    const state = await TrackPlayer.getState();
-    if (state === State.Paused && isCurrentTrack) {
-      setIsPlaying(!isPlaying);
+const playOrPause = async isCurrentTrack => {
+      const state = await TrackPlayer.getState();
+      if (state === State.Paused && isCurrentTrack) {
+
+        await notifee.createChannel({
+          id: 'music',
+          name: 'Lecture en cours',
+        });
+    
+        await notifee.displayNotification({
+          title: 'Lecture en cours',
+          body: 'Vous écoutez de la musique !',
+          android: {
+            channelId: 'music',
+          },
+        });
+
+        setIsPlaying(!isPlaying);
+        TrackPlayer.play();
+        return;
+      }
+      if (state === State.Playing && isCurrentTrack) {
+        setIsPlaying(!isPlaying);
+        TrackPlayer.pause();
+        return;
+      }
+      setIsPlaying(true);
+
       TrackPlayer.play();
       return;
     }

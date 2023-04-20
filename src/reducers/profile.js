@@ -2,6 +2,7 @@ import { PROFILE_DETAILS_REQUEST } from "../actions/profile";
 
 const initialState = {
     user: {
+        uid: null,
         displayName: null,
         email: null,
         pays: null,

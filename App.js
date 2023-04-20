@@ -8,7 +8,6 @@ import {useTranslation} from 'react-i18next';
 import {store} from './src/config/store';
 import {theme} from './src/components/styles/theme';
 import {musiclibrary} from './data';
-import TrackPlayerScreen from './src/components/TrackPlayerScreen';
 import TrackPlayer from 'react-native-track-player';
 
 const App = () => {
@@ -25,11 +24,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <Routes />
       </ThemeProvider>
-     
     </Provider>
-    // <ThemeProvider theme={theme}>
-    //   <Routes />
-    // </ThemeProvider>
   );
 };
 

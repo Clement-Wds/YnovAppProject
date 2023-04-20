@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import React, {useState} from 'react';
+import {TouchableOpacity, Text, Alert} from 'react-native';
 import styled from 'styled-components/native';
 import DocumentPicker from 'react-native-document-picker';
 
@@ -23,13 +23,15 @@ const AudioInput = () => {
       });
       setAudioFile(result);
     } catch (err) {
-      console.log('Error selecting audio file: ', err);
+      Alert.alert('error', `Error selecting audio file: ${err}`);
     }
   };
 
   return (
     <StyledTouchableOpacity onPress={handleAudioSelect}>
-      <StyledText>{audioFile ? audioFile.name : 'Sélectionner un fichier audio'}</StyledText>
+      <StyledText>
+        {audioFile ? audioFile.name : 'Sélectionner un fichier audio'}
+      </StyledText>
     </StyledTouchableOpacity>
   );
 };

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, TouchableOpacity} from 'react-native';
+import {TouchableOpacity, Alert} from 'react-native';
 import {initializeApp} from 'firebase/app';
 import {ref, get} from 'firebase/database';
 import {getDatabase} from 'firebase/database';
@@ -35,10 +35,8 @@ const AlbumScreen = () => {
         setAlbums(albums);
       })
       .catch(error => {
-        console.log(error);
+        Alert.alert('error', error);
       });
-      
-      
   }, []);
 
   return (
@@ -64,7 +62,7 @@ const AlbumScreen = () => {
             </TouchableOpacity>
           </AlbumWrapper>
         )}
-        keyExtractor={(item, index) => `${index}`}
+        keyExtractor={index => `${index}`}
       />
     </Container>
   );

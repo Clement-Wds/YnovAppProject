@@ -1,19 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-} from 'react-native';import {initializeApp} from 'firebase/app';
+import {View, Text, StyleSheet, Image, Alert} from 'react-native';
+import {initializeApp} from 'firebase/app';
 import {ref, get} from 'firebase/database';
 import {getDatabase} from 'firebase/database';
 import styled from 'styled-components/native';
-import AudioPlayer from '../../components/AudioPlayer';
 import config from '../../../firebase';
 import {firebase} from '@react-native-firebase/auth';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-
 
 // Initialize Firebase app
 if (!firebase.apps.length) {
@@ -28,7 +22,7 @@ const AlbumScreenCard = () => {
   const [tracks, setTracks] = useState([]);
   const [album, setAlbum] = useState('');
   const [musiques, setMusiques] = useState([]);
-  const [urlAlbum,setUrlAlbum]=useState('');
+  const [urlAlbum, setUrlAlbum] = useState('');
 
   useEffect(() => {
     const albumRef = ref(db, `artist/${artist}/${title}`);
@@ -43,57 +37,49 @@ const AlbumScreenCard = () => {
         setAlbum(title);
       })
       .catch(error => {
-        console.log(error);
+        Alert.alert('error', error);
       });
   }, [artist, title]);
-  
-
-  
 
   useEffect(() => {
     const storageRef = firebase.storage().ref();
     const albumDocRef = storageRef.child(`audio/artiste/${artist}/${title}`);
-    const photoalbumDocRef = storageRef.child(`audio/artiste/${artist}/${title}/photo`);
-    
-    albumDocRef.listAll().then((res) => {
-      const mp3Files = res.items.filter((item) => item.name.endsWith('.mp3'));
-      const fileNames = mp3Files.map((file) => file.name.replace(".mp3", ""));
-      const filePaths = mp3Files.map((file) => `audio/artiste/${artist}/${title}/${file.name}`);
-  
-      setMusiques(fileNames);
-    }).catch((error) => {
-      console.error(error);
-    });
-  
-    
-    // Listage de tous les fichiers dans le dossier "photo"
-    storageRef.child(`audio/artiste/${artist}/${title}/photo`).listAll().then((res) => {
-      const photoFiles = res.items;
-      const photoUrls = photoFiles.map((file) => file.getDownloadURL());
-  
-      Promise.all(photoUrls).then((urls) => {
-        console.log(urls);
-        setUrlAlbum(urls[0])
+
+    albumDocRef
+      .listAll()
+      .then(res => {
+        const mp3Files = res.items.filter(item => item.name.endsWith('.mp3'));
+        const fileNames = mp3Files.map(file => file.name.replace('.mp3', ''));
+
+        setMusiques(fileNames);
+      })
+      .catch(error => {
+        Alert.alert('error', error);
       });
-    }).catch((error) => {
-      console.error(error);
-    });
+
+    // Listage de tous les fichiers dans le dossier "photo"
+    storageRef
+      .child(`audio/artiste/${artist}/${title}/photo`)
+      .listAll()
+      .then(res => {
+        const photoFiles = res.items;
+        const photoUrls = photoFiles.map(file => file.getDownloadURL());
+
+        Promise.all(photoUrls).then(urls => {
+          setUrlAlbum(urls[0]);
+        });
+      })
+      .catch(error => {
+        Alert.alert('error', error);
+      });
   }, []);
-  
-
-
 
   const renderItem = ({item}) => {
-    
     return (
       <TrackWrapper>
-        
         <View>
-                <Text style={styles.widgetMusicTitle}>
-                  {item}
-                </Text>
-                
-          </View>
+          <Text style={styles.widgetMusicTitle}>{item}</Text>
+        </View>
         {/* <AudioPlayer source={{uri: item.audioUrl}} /> */}
       </TrackWrapper>
     );
@@ -104,10 +90,7 @@ const AlbumScreenCard = () => {
       <LinearGradient
         colors={['#0000ff', '#00005f', '#191414']}
         style={styles.linearGradient}>
-        <Image
-          style={{width: 200, height: 200}}
-          source={{uri: urlAlbum}}
-        />
+        <Image style={{width: 200, height: 200}} source={{uri: urlAlbum}} />
       </LinearGradient>
       <ArtistName>{artist}</ArtistName>
 
@@ -115,17 +98,11 @@ const AlbumScreenCard = () => {
       <TrackList
         data={musiques}
         renderItem={renderItem}
-        keyExtractor={(item, index) => `${index}`}
+        keyExtractor={index => `${index}`}
       />
     </View>
   );
 };
-
-const Container = styled.View`
-  background-color: #121212;
-  flex: 1;
-  padding: 20px;
-`;
 
 const AlbumTitle = styled.Text`
   color: #fff;
@@ -153,12 +130,6 @@ const TrackWrapper = styled.View`
   padding: 10px;
 `;
 
-const TrackTitle = styled.Text`
-  color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-`;
 const styles = StyleSheet.create({
   container: {
     flex: 1,

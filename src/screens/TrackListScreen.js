@@ -21,6 +21,12 @@ import TrackPlayer, {
   State,
   useProgress
 } from 'react-native-track-player';
+import {initializeApp} from 'firebase/app';
+import {ref, get} from 'firebase/database';
+import {getDatabase} from 'firebase/database';
+import {firebase} from '@react-native-firebase/auth';
+import config from '../../../firebase';
+
 
 const events = [
   Event.PlaybackState,
@@ -51,6 +57,13 @@ export default function TrackListScreen() {
       console.log(event.type);
     }
   });
+  if (!firebase.apps.length) {
+    firebase.initializeApp(config);
+  }
+  const app = initializeApp(config);
+  const db = getDatabase(app);
+
+  
   
   
   const PlaylistImageView = () => (

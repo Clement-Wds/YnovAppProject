@@ -27,11 +27,11 @@ import {initializeApp} from 'firebase/app';
 import {ref, get} from 'firebase/database';
 import {getDatabase} from 'firebase/database';
 import {firebase} from '@react-native-firebase/auth';
-import config from '../../../firebase';
+import config from '../../firebase';
 
-import { useSelector, useDispatch } from 'react-redux';
-import {profileDetailsRequest} from "../../actions/profile";
-import notifee from "@notifee/react-native";
+import {useSelector, useDispatch} from 'react-redux';
+import {profileDetailsRequest} from '../actions/profile';
+import notifee from '@notifee/react-native';
 
 const events = [
   Event.PlaybackState,
@@ -53,16 +53,16 @@ export default function TrackListScreen() {
 
   const dispatch = useDispatch();
   const profileState = useSelector(state => state.profile.user);
-  console.log("STATE : " + profileState);
+  console.log('STATE : ' + profileState);
 
   useEffect(() => {
-    if(user) {
+    if (user) {
       //UTILISATION DE REDUX pour afficher l'utilisateur
       dispatch(profileDetailsRequest(user));
     }
   }, [user]);
 
-  console.log("USER UID : ", profileState?.uid);
+  console.log('USER UID : ', profileState?.uid);
 
   useTrackPlayerEvents(events, event => {
     if (event.type === Event.PlaybackError) {
@@ -84,9 +84,6 @@ export default function TrackListScreen() {
   const app = initializeApp(config);
   const db = getDatabase(app);
 
-  
-  
-  
   const PlaylistImageView = () => (
     <>
       <LinearGradient
@@ -99,6 +96,29 @@ export default function TrackListScreen() {
       </LinearGradient>
     </>
   );
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message:
+          //Name of the song   //Artist name
+          `Hey, I am listening to ${selectedMusic.title} by ${selectedMusic.artist} on YnovApp. You should check it out!`,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   const onSelectTrack = async (selectedTrack, index) => {
     setSelectedMusic(selectedTrack);
     setTimestamp(0);
@@ -128,7 +148,7 @@ export default function TrackListScreen() {
         id: 'music',
         name: 'Lecture en cours',
       });
-  
+
       await notifee.displayNotification({
         title: 'Lecture en cours',
         body: 'Vous écoutez de la musique !',

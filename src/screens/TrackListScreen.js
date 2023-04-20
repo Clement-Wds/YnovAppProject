@@ -144,6 +144,9 @@ export default function TrackListScreen() {
   const playOrPause = async isCurrentTrack => {
     const state = await TrackPlayer.getState();
     if (state === State.Paused && isCurrentTrack) {
+      setIsPlaying(!isPlaying);
+      TrackPlayer.play();
+
       await notifee.createChannel({
         id: 'music',
         name: 'Lecture en cours',
@@ -156,8 +159,7 @@ export default function TrackListScreen() {
           channelId: 'music',
         },
       });
-      setIsPlaying(!isPlaying);
-      TrackPlayer.play();
+
       return;
     }
     if (state === State.Playing && isCurrentTrack) {

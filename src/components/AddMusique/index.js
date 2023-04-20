@@ -1,10 +1,5 @@
 import React, {useState} from 'react';
-import {
-  TouchableOpacity,
-  Text,
-  View,
-  PermissionsAndroid,
-} from 'react-native';
+import {TouchableOpacity, Text, PermissionsAndroid, Alert} from 'react-native';
 import {initializeApp} from 'firebase/app';
 import config from '../../../firebase';
 import {useEffect} from 'react';
@@ -18,7 +13,7 @@ import styled from 'styled-components/native';
 import DocumentPicker from 'react-native-document-picker';
 import {requestMultiple} from 'react-native-permissions';
 import {getDatabase} from 'firebase/database';
-import {ref, set, get, query, orderByChild, equalTo} from 'firebase/database';
+import {ref, set, get} from 'firebase/database';
 import {useNavigation} from '@react-navigation/native';
 import Button from '../../components/button';
 import {useTranslation} from 'react-i18next';
@@ -51,7 +46,6 @@ const addMusique = () => {
   const [photoAlbumFile, setPhotoAlbumFile] = useState(null);
   const [photoArtistFile, setPhotoArtistFile] = useState(null);
 
-
   const [artiste, setArtiste] = useState('');
   const [album, setAlbum] = useState('');
   const [selected, setSelected] = useState('');
@@ -78,10 +72,8 @@ const addMusique = () => {
         setArtists(artists);
       })
       .catch(error => {
-        console.log(error);
+        Alert.alert('error', error);
       });
-     
-      
   }, []);
 
   useEffect(() => {
@@ -97,7 +89,7 @@ const addMusique = () => {
           setAlbums(albums);
         })
         .catch(error => {
-          console.log(error);
+          Alert.alert('error', error);
         });
     }
   }, [selectedArtist]);
@@ -111,7 +103,6 @@ const addMusique = () => {
 
   const fetchAlbumsByArtist = artistName => {
     const albumsRef = ref(db, `artist/${artistName}/`);
-    console.log('test');
     get(albumsRef)
       .then(snapshot => {
         const albums = [];
@@ -119,24 +110,16 @@ const addMusique = () => {
           const album = childSnapshot.val();
           albums.push(album);
         });
-        console.log('les albums sont' && album);
         setAlbums(albums);
       })
       .catch(error => {
-        console.log(error);
+        Alert.alert('error', error);
       });
   };
 
   // Récupérer une référence de stockage
   const storageRef = firebase.storage().ref();
-  useEffect(
-    () => {
-      console.log(audioFile);
-      console.log(photoAlbumFile);
-    },
-    [audioFile],
-    [photoAlbumFile],
-  );
+  useEffect(() => {}, [audioFile], [photoAlbumFile]);
 
   const handleAudioSelect = async () => {
     try {
@@ -151,7 +134,7 @@ const addMusique = () => {
 
       setAudioFile(result);
     } catch (err) {
-      console.log('Error selecting audio file: ', err);
+      Alert.alert('error', `Error selecting audio file: ${err}`);
     }
   };
 
@@ -168,7 +151,7 @@ const addMusique = () => {
 
       setPhotoAlbumFile(result);
     } catch (err) {
-      console.log('Error selecting photo file: ', err);
+      Alert.alert('error', `Error selecting photo file: ${err}`);
     }
   };
 
@@ -185,7 +168,7 @@ const addMusique = () => {
 
       setPhotoArtistFile(result);
     } catch (err) {
-      console.log('Error selecting photo file: ', err);
+      Alert.alert(`Error selecting photo file: ${err}`);
     }
   };
 
@@ -199,76 +182,39 @@ const addMusique = () => {
       const task = fileRef.putFile(audioFile[0].fileCopyUri);
       task.on(
         'state_changed',
-        snapshot => {
-          // Handle upload progress if needed
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(`Upload is ${progress}% done`);
-        },
         error => {
           // Handle errors during upload if needed
-          console.error(error);
+          Alert.alert('error', error);
         },
         async () => {
           // Handle successful upload
 
-          const downloadURL = await fileRef.getDownloadURL();
-
           if (photoAlbumFile && isSelected2) {
             const photoAlbumFileRef = storageRef.child(
-              `audio/artiste/${isSelected ? artiste : selected}/${album}/photo/${
-                photoAlbumFile[0].name
-              }`,
+              `audio/artiste/${
+                isSelected ? artiste : selected
+              }/${album}/photo/${photoAlbumFile[0].name}`,
             );
-            const photoAlbumTask = photoAlbumFileRef.putFile(photoAlbumFile[0].fileCopyUri);
-            photoAlbumTask.on(
-              'state_changed',
-              snapshot => {
-                // Handle upload progress if needed
-                const progress =
-                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(`Upload is ${progress}% done`);
-              },
-              error => {
-                // Handle errors during upload if needed
-                console.error(error);
-              },
-              async () => {
-                // Handle successful upload
-
-                const photoDownloadURL = await photoAlbumFileRef.getDownloadURL();
-                // Do something with the photo download URL
-              },
+            const photoAlbumTask = photoAlbumFileRef.putFile(
+              photoAlbumFile[0].fileCopyUri,
             );
+            photoAlbumTask.on('state_changed', error => {
+              // Handle errors during upload if needed
+              Alert.alert('error', error);
+            });
           }
           if (photoArtistFile && isSelected) {
             const photoArtistFileRef = storageRef.child(
-              `audio/artiste/${artiste}/photo/${
-                photoArtistFile[0].name
-              }`,
+              `audio/artiste/${artiste}/photo/${photoArtistFile[0].name}`,
             );
-            const photoArtistTask = photoArtistFileRef.putFile(photoArtistFile[0].fileCopyUri);
-            photoArtistTask.on(
-              'state_changed',
-              snapshot => {
-                // Handle upload progress if needed
-                const progress =
-                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(`Upload is ${progress}% done`);
-              },
-              error => {
-                // Handle errors during upload if needed
-                console.error(error);
-              },
-              async () => {
-                // Handle successful upload
-
-                const photoArtistDownloadURL = await photoArtistFileRef.getDownloadURL();
-                // Do something with the photo download URL
-              },
+            const photoArtistTask = photoArtistFileRef.putFile(
+              photoArtistFile[0].fileCopyUri,
             );
+            photoArtistTask.on('state_changed', error => {
+              // Handle errors during upload if needed
+              Alert.alert('error', error);
+            });
           }
-
 
           function cleanFileName(fileName) {
             return fileName.replace(/[.$#\[\]\/]/g, '_');
@@ -298,17 +244,20 @@ const addMusique = () => {
               const musicExists = results[2].exists();
 
               if (artistExists && albumExists && musicExists) {
-                console.log(
+                Alert.alert(
+                  'warning',
                   "L'artiste, l'album et la musique existent déjà dans la base de données.",
                 );
                 return;
               } else if (artistExists && albumExists && !musicExists) {
-                console.log(
+                Alert.alert(
+                  'warning',
                   "L'artiste et l'album existent déjà dans la base de données, mais pas la musique. Ajout de la musique...",
                 );
                 return set(musicRef, {name: cleanFileName(audioFile[0].name)});
               } else if (artistExists && !albumExists) {
-                console.log(
+                Alert.alert(
+                  'warning',
                   "L'artiste existe déjà dans la base de données, mais pas l'album ni la musique. Ajout de l'album et de la musique...",
                 );
                 return set(albumRef, {
@@ -317,7 +266,8 @@ const addMusique = () => {
                   },
                 });
               } else {
-                console.log(
+                Alert.alert(
+                  'error',
                   "L'artiste, l'album et la musique n'existent pas dans la base de données. Ajout de l'artiste, de l'album et de la musique...",
                 );
                 return set(artistRef, {
@@ -329,14 +279,10 @@ const addMusique = () => {
                 });
               }
             })
-            .then(() => {
-              console.log('good');
-            })
             .catch(error => {
-              console.log(error);
+              Alert.alert('error', error);
             });
 
-          console.log('hey');
           setAudioFile(null);
           setPhotoAlbumFile(null);
           setArtiste(null);
@@ -346,95 +292,102 @@ const addMusique = () => {
         },
       );
     } else {
-      console.log('Invalid audio file uri or file type');
+      Alert.alert('error', 'Invalid audio file uri or file type');
     }
   };
-  const handleSelection = (newValue) => {
+  const handleSelection = newValue => {
     setSelection(newValue);
     setSelection2(newValue);
   };
 
   return (
     <Container>
-    <Title>{t('resources.addMusic.addElement')}</Title>
+      <Title>{t('resources.addMusic.addElement')}</Title>
 
-    <AddSection>
-      {!isSelected ? (
-        <SelectList
-          setSelected={val => setSelected(val)}
-          data={artists}
-          save="value"
-          placeholder={t('resources.addMusic.selectArtist')}
-          onSelect={handleArtistChange}
+      <AddSection>
+        {!isSelected ? (
+          <SelectList
+            setSelected={val => setSelected(val)}
+            data={artists}
+            save="value"
+            placeholder={t('resources.addMusic.selectArtist')}
+            onSelect={handleArtistChange}
+          />
+        ) : null}
+
+        <Text>{t('resources.addMusic.artistDoesntExist')}</Text>
+        <CheckBox
+          disabled={false}
+          value={isSelected}
+          onValueChange={handleSelection}
         />
-      ) : null}
 
-      <Text>{t('resources.addMusic.artistDoesntExist')}</Text>
-      <CheckBox
-        disabled={false}
-        value={isSelected}
-        onValueChange={handleSelection}
-      />
+        {isSelected ? (
+          <>
+            <TextInput
+              placeholder={t('resources.addMusic.artist')}
+              value={artiste}
+              onChangeText={text => setArtiste(text)}
+            />
+            <StyledTouchableOpacity onPress={handlePhotoArtistSelect}>
+              <Text>
+                {photoArtistFile
+                  ? photoArtistFile[0].name
+                  : t('resources.addMusic.selectArtistPhoto')}
+              </Text>
+            </StyledTouchableOpacity>
+          </>
+        ) : null}
 
-      {isSelected ? (
-        <>
-        <TextInput
-          placeholder={t('resources.addMusic.artist')}
-          value={artiste}
-          onChangeText={text => setArtiste(text)}
+        {!isSelected2 ? (
+          <SelectList
+            setSelected={val => setSelected2(val)}
+            data={albums}
+            save="value"
+            placeholder={t('resources.addMusic.selectAlbum')}
+          />
+        ) : null}
+        <Text>{t('resources.addMusic.albumDoesntExist')}</Text>
+        <CheckBox
+          disabled={false}
+          value={isSelected2}
+          onValueChange={newValue => setSelection2(newValue)}
         />
-        <StyledTouchableOpacity onPress={handlePhotoArtistSelect}>
+        {isSelected2 ? (
+          <TextInput
+            placeholder={t('resources.addMusic.album')}
+            value={album}
+            onChangeText={text => setAlbum(text)}
+          />
+        ) : null}
+
+        {isSelected2 ? (
+          <StyledTouchableOpacity onPress={handlePhotoAlbumSelect}>
+            <Text>
+              {photoAlbumFile
+                ? photoAlbumFile[0].name
+                : t('resources.addMusic.selectAlbumPhoto')}
+            </Text>
+          </StyledTouchableOpacity>
+        ) : null}
+        <StyledTouchableOpacity onPress={handleAudioSelect}>
           <Text>
-            {photoArtistFile ? photoArtistFile[0].name : t('resources.addMusic.selectArtistPhoto')}
+            {audioFile
+              ? audioFile[0].name
+              : t('resources.addMusic.selectAudio')}
           </Text>
         </StyledTouchableOpacity>
 
-        </>
-
-      ) : null}
-
-      {!isSelected2 ? (
-        <SelectList
-          setSelected={val => setSelected2(val)}
-          data={albums}
-          save="value"
-          placeholder={t('resources.addMusic.selectAlbum')}
+        <Button
+          title={t('resources.addMusic.download')}
+          onPress={handleUpload}
         />
-      ) : null}
-      <Text>{t('resources.addMusic.albumDoesntExist')}</Text>
-      <CheckBox
-        disabled={false}
-        value={isSelected2}
-        onValueChange={newValue => setSelection2(newValue)}
-      />
-      {isSelected2 ? (
-        <TextInput
-          placeholder={t('resources.addMusic.album')}
-          value={album}
-          onChangeText={text => setAlbum(text)}
+        <Button
+          title={t('resources.addMusic.delete')}
+          onPress={() => navigation.navigate('DeleteMusique')}
         />
-      ) : null}
-
-      {isSelected2 ? (
-        <StyledTouchableOpacity onPress={handlePhotoAlbumSelect}>
-          <Text>
-            {photoAlbumFile ? photoAlbumFile[0].name : t('resources.addMusic.selectAlbumPhoto')}
-          </Text>
-        </StyledTouchableOpacity>
-      ) : null}
-      <StyledTouchableOpacity onPress={handleAudioSelect}>
-        <Text>
-          {audioFile ? audioFile[0].name : t('resources.addMusic.selectAudio')}
-        </Text>
-      </StyledTouchableOpacity>
-
-      <Button title={t('resources.addMusic.download')}onPress={handleUpload} />
-      <Button
-        title={t('resources.addMusic.delete')}
-        onPress={() => navigation.navigate('DeleteMusique')}
-      />
       </AddSection>
-  </Container>
+    </Container>
   );
 };
 
@@ -450,7 +403,6 @@ const Container = styled.View`
   flex: 1;
   padding: 20px;
 `;
-
 
 const Title = styled.Text`
   font-size: 24px;

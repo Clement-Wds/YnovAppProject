@@ -61,6 +61,11 @@ export default {
         showPassword: 'Voir le mot de passe ?',
         forgotPassword: 'Mot de passe oublié ?',
       },
+      logout: {
+        title: 'Déconnexion',
+        description: 'Ceci est la page de déconnexion',
+        logout: 'Déconnexion',
+      },
 
       addMusic: {
         title: 'Ajouter de la musique',

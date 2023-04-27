@@ -61,6 +61,24 @@ export default function TrackListScreen() {
     }
   }, [user]);
 
+  // const [musiclibrary, setMusicLibrary] = useState([]);
+
+  // useEffect(() => {
+  //   const artistRef = ref(db, 'users/playlist');
+  //   get(artistRef)
+  //     .then(snapshot => {
+  //       const musics = [];
+  //       snapshot.forEach(childSnapshot => {
+  //         const music = childSnapshot.key;
+  //         musics.push(music);
+  //       });
+  //       setMusicLibrary(musics);
+  //     })
+  //     .catch(error => {
+  //       Alert.alert('error', error);
+  //     });
+  // }, []);
+
   useTrackPlayerEvents(events, event => {
     if (event.type === Event.PlaybackError) {
       console.warn('An error occurred while playing the current track.');

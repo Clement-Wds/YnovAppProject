@@ -47,6 +47,9 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 - Partage de musique entre les téléphones / utilisateurs
 - Ajout de Admob pour les publicités
 
+## Logo Application :
+-![qemu-system-x86_64_qtJYALtUiT](https://user-images.githubusercontent.com/56970054/234806528-d7958e46-b81f-4c1d-b70b-72bfdfdc3298.png) 
+
  ## Page d'accueil / Albums et titres :
 - ![qemu-system-x86_64_sdgbQGIXAl](https://user-images.githubusercontent.com/56970054/233374415-ba320d77-3769-4f2c-a346-a304057698cc.gif)
 

@@ -59,13 +59,20 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
  ## Ajout de Musique :
 - ![qemu-system-x86_64_J23bBdED2Y](https://user-images.githubusercontent.com/56970054/233375454-b64edacf-9d56-4185-aa11-72d578fdfa22.gif)
 
+ ## Lecture de Musique :
+ - ![qemu-system-x86_64_NTwodg7VfI](https://user-images.githubusercontent.com/56970054/234803404-4ea8bf77-aafb-41a3-bb5a-d8aaca1fcd24.gif)
+ 
+ ## Partage de Musique :
+ - ![qemu-system-x86_64_VBcuOG0JAK](https://user-images.githubusercontent.com/56970054/234803823-23721dd9-69a4-4774-b35a-79454d9502c0.gif)
 
  ## Suppresion de Musique :
 - ![qemu-system-x86_64_WSz19euiTv](https://user-images.githubusercontent.com/56970054/233377278-11a9a32b-037d-4702-812b-6870abee82a0.gif)
 
+## Notification (Notifee)
+- ![qemu-system-x86_64_ik7xeSOZUD](https://user-images.githubusercontent.com/56970054/234804347-c53ff495-a5bc-484c-90bb-958ae4dcfe3c.gif)
+
 ## Traduction : 
 - ![qemu-system-x86_64_7g5ZJPsYq8](https://user-images.githubusercontent.com/56970054/233378196-ef31907a-dcc5-4761-a9c8-208d7bf7d9c8.gif)
-
 
 ## Bonus :
 - Détecter le thème utilisateur

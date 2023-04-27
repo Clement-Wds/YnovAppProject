@@ -25,6 +25,7 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 - Reset Password
 - stokage du code pays
 - gestion de la musique
+- Ajout de AdMob pour les publicités
 
 ## Deadline 1 :
 - Routeur
@@ -44,6 +45,7 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 - Lecteur de musique version finale et propre
 - Utilisation de Notifee
 - Partage de musique entre les téléphones / utilisateurs
+- Ajout de Admob pour les publicités
 
  ## Page d'accueil / Albums et titres :
 - ![qemu-system-x86_64_sdgbQGIXAl](https://user-images.githubusercontent.com/56970054/233374415-ba320d77-3769-4f2c-a346-a304057698cc.gif)

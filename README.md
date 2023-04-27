@@ -20,7 +20,7 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 - Lecteur de musique
 - Gestionnaire de la bibliothèque de musique
 - Utilisation du GPS pour localiser le pays de l'utilisateur et gérer le blocage des musiques par zone géographique
-- Utilisation de l'appareil photo pour créer une photo de profil + photo de pochette d'album
+- Partage de musique entre les téléphones / utilisateurs
 - Système multilingue
 - Reset Password
 - stokage du code pays
@@ -40,10 +40,10 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
 - CRUD Profil FINI
 - CRUD Musique FINI
 - Utilisation du GPS pour localiser le pays de l'utilisateur et gérer le blocage des musiques par zone géographique
-- Utilisation de l'appareil photo pour créer une photo de profil + photo de pochette d'album
 - Gestionnaire de la bibliothèque de musique
 - Lecteur de musique version finale et propre
 - Utilisation de Notifee
+- Partage de musique entre les téléphones / utilisateurs
 
  ## Page d'accueil / Albums et titres :
 - ![qemu-system-x86_64_sdgbQGIXAl](https://user-images.githubusercontent.com/56970054/233374415-ba320d77-3769-4f2c-a346-a304057698cc.gif)

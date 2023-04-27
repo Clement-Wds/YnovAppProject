@@ -51,8 +51,12 @@ Cette application est basée sur le modèle de Spotify pour proposer de l'envoie
  ## Login / Page Profil :
 - ![qemu-system-x86_64_jzbX4dNVUM](https://user-images.githubusercontent.com/56970054/233375065-d56f5236-6d0d-47ea-b3eb-ad191d1f8ce7.gif)
 
+## Mot de passe oublié :
+- ![qemu-system-x86_64_zeP6W4nM0v](https://user-images.githubusercontent.com/56970054/234800870-64c6d2fe-1e2a-42bd-b709-591141eac2df.gif)
+
  ## Ajout de Musique :
 - ![qemu-system-x86_64_J23bBdED2Y](https://user-images.githubusercontent.com/56970054/233375454-b64edacf-9d56-4185-aa11-72d578fdfa22.gif)
+
 
  ## Suppresion de Musique :
 - ![qemu-system-x86_64_WSz19euiTv](https://user-images.githubusercontent.com/56970054/233377278-11a9a32b-037d-4702-812b-6870abee82a0.gif)
